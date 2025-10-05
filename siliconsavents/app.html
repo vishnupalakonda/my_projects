@@ -1,0 +1,4063 @@
+<!-- this is my project -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Silicon Savantas Flow</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root {
+      --bg: #0f1724;
+      --card: #0b1220;
+      --accent: #5eead4;
+      --muted: #9ca3af;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: var(--bg);
+      color: #fff;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .page { display: none; width: 100%; height: 100vh; align-items: center; justify-content: center; flex-direction: column; }
+    .active { display: flex; }
+
+    /* Loader Page */
+    .loader {
+      border: 6px solid #2b2b4d;
+      border-top: 6px solid var(--accent);
+      border-radius: 50%;
+      width: 60px; height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin { 0% { transform: rotate(0deg);} 100% { transform: rotate(360deg);} }
+
+    /* Card style */
+    .card {
+      background: var(--card);
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      width: 360px;
+      max-width: 90%;
+      text-align: center;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 6px;
+      border: 1px solid #333;
+      background: #1e293b;
+      color: #fff;
+    }
+    button {
+      padding: 10px 14px;
+      background: var(--accent);
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover { opacity: 0.9; }
+    .form-toggle { display: flex; justify-content: space-around; margin-bottom: 12px; }
+    .hidden { display: none; }
+    p { text-align: justify; line-height: 1.5; margin: 12px 0; }
+    
+    /* Admin Dashboard Styles */
+    :root {
+      --bg: #000;
+      --card: rgba(0,0,0,0.8);
+      --highlight: #0ff;
+      --accent: #60a5fa;
+      --accent2: #34d399;
+    }
+    .admin-container {
+      display: flex;
+      flex-direction: row;
+      height: 100vh;
+      width: 100%;
+    }
+    .admin-sidebar {
+      width: 260px;
+      background: var(--card);
+      padding: 20px 0;
+      border-right: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+    .admin-header {
+      background: #0b1220;
+      padding: 14px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .admin-nav {
+      display: flex;
+      gap: 10px;
+    }
+    .admin-nav button {
+      background: linear-gradient(90deg, var(--highlight), #09f);
+      border: none;
+      color: #000;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+      box-shadow: 0 0 20px var(--highlight);
+      transition: all 0.2s;
+    }
+    .admin-nav button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px var(--highlight), 0 0 40px #09f;
+    }
+    
+    /* Updated sidebar option styles */
+    .sidebar-option {
+      background: transparent;
+      border: none;
+      color: #fff;
+      padding: 12px 20px;
+      text-align: left;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 600;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: 100%;
+    }
+    .sidebar-option:hover {
+      background: rgba(255,255,255,0.1);
+      color: var(--highlight);
+    }
+    .sidebar-option i {
+      width: 20px;
+      text-align: center;
+      color: var(--accent);
+    }
+    
+    .admin-main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .admin-content {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+    }
+    .sub-option {
+      background: var(--card);
+      padding: 20px;
+      border-radius: 12px;
+      margin: 10px 0;
+      cursor: pointer;
+      border: 1px solid var(--highlight);
+      box-shadow: 0 0 25px var(--highlight);
+      transition: all 0.3s;
+    }
+    .sub-option:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 30px var(--highlight);
+    }
+    .sub-option i {
+      color: var(--accent2);
+      margin-right: 10px;
+    }
+    #admin-content {
+      margin-top: 20px;
+    }
+    .course-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .course-card {
+      background: var(--card);
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
+      border: 1px solid var(--highlight);
+      box-shadow: 0 0 15px var(--highlight);
+      transition: all 0.3s;
+    }
+    .course-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px var(--highlight);
+    }
+    .course-card i {
+      font-size: 30px;
+      color: var(--accent2);
+      margin-bottom: 10px;
+    }
+    .detail-section {
+      display: none;
+      background: var(--card);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 20px;
+      border: 1px solid var(--highlight);
+      box-shadow: 0 0 25px var(--highlight);
+    }
+    .day-item {
+      background: rgba(255,255,255,0.05);
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border-left: 4px solid var(--accent2);
+    }
+    .day-item h4 {
+      color: var(--accent2);
+      margin-bottom: 10px;
+    }
+    .notes-content {
+      display: none;
+      margin-top: 12px;
+      line-height: 1.6;
+      font-size: 14px;
+    }
+    .notes-content pre {
+      background: #111;
+      padding: 12px;
+      border-radius: 8px;
+      overflow: auto;
+      color: var(--highlight);
+    }
+    .notes-content a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+    .notes-content a:hover {
+      text-decoration: underline;
+    }
+    .option-box {
+      border: 1px solid var(--highlight);
+      border-radius: 12px;
+      padding: 20px;
+      width: 90%;
+      max-width: 600px;
+      margin: 20px auto;
+      background: var(--card);
+      box-shadow: 0 0 25px var(--highlight);
+    }
+    input, select, button, textarea {
+      width: 100%;
+      margin: 10px 0;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      outline: none;
+      background: #111;
+      color: var(--highlight);
+      font-size: 15px;
+      box-shadow: 0 0 12px var(--highlight);
+    }
+    textarea#writeAssignmentAnswer {
+      min-height: 150px;
+      resize: vertical;
+      font-family: 'Courier New', Courier, monospace;
+    }
+    button {
+      cursor: pointer;
+      font-weight: bold;
+      background: linear-gradient(90deg, var(--highlight), #09f);
+      color: #000;
+      box-shadow: 0 0 20px var(--highlight);
+      transition: 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px var(--highlight), 0 0 40px #09f;
+    }
+    .internship-card, .job-card, .poster-card, .task-card, .event-card, .hackathon-card, .assignment-card, .certificate-card {
+      border: 1px solid var(--highlight);
+      border-radius: 10px;
+      padding: 10px;
+      margin: 10px 0;
+      box-shadow: 0 0 15px var(--highlight);
+    }
+    .internship-card img, .job-card img, .poster-card img, .task-card img, .event-card img, .hackathon-card img {
+      max-width: 100%;
+      border-radius: 8px;
+      margin-bottom: 10px;
+    }
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 15px;
+      padding: 8px 16px;
+      background: var(--accent);
+      color: #000;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    
+    /* Profile and Settings Styles */
+    .profile-container, .settings-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: var(--card);
+      border-radius: 12px;
+      padding: 30px;
+      border: 1px solid var(--highlight);
+      box-shadow: 0 0 25px var(--highlight);
+    }
+    .profile-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .profile-avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 40px;
+      color: #000;
+      font-weight: bold;
+    }
+    .profile-info h2 {
+      margin: 0 0 5px 0;
+      color: var(--highlight);
+    }
+    .profile-info p {
+      margin: 5px 0;
+      color: var(--muted);
+    }
+    .profile-section {
+      margin-bottom: 25px;
+    }
+    .profile-section h3 {
+      color: var(--accent2);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .profile-section h3 i {
+      color: var(--highlight);
+    }
+    .profile-details {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    .profile-item {
+      background: rgba(255,255,255,0.05);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+    }
+    .profile-item h4 {
+      margin: 0 0 5px 0;
+      color: var(--accent);
+    }
+    .profile-item p {
+      margin: 0;
+      color: #fff;
+    }
+    .profile-item input {
+      margin: 5px 0;
+      padding: 8px;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .settings-section {
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .settings-section:last-child {
+      border-bottom: none;
+    }
+    .settings-section h3 {
+      color: var(--accent2);
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .settings-section h3 i {
+      color: var(--highlight);
+    }
+    .settings-options {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+    }
+    .setting-option {
+      background: rgba(255,255,255,0.05);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 3px solid var(--accent);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .setting-option label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .setting-option label i {
+      color: var(--highlight);
+    }
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: .4s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+    input:checked + .slider {
+      background-color: var(--accent);
+    }
+    input:checked + .slider:before {
+      transform: translateX(26px);
+    }
+    .action-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+    }
+    .action-buttons button {
+      flex: 1;
+    }
+    .account-status {
+      background: rgba(255,255,255,0.05);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 3px solid var(--accent2);
+    }
+    .account-status h4 {
+      color: var(--accent2);
+      margin: 0 0 10px 0;
+    }
+    .account-status p {
+      margin: 5px 0;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .account-status .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #34d399;
+      display: inline-block;
+    }
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 15px 20px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+      color: #000;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 1000;
+      display: none;
+      animation: slideIn 0.3s ease-out;
+    }
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    .verification-section {
+      background: rgba(255,255,255,0.05);
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      border-left: 3px solid #f59e0b;
+    }
+    .verification-section h4 {
+      color: #f59e0b;
+      margin: 0 0 10px 0;
+    }
+    .verification-section p {
+      margin: 5px 0;
+    }
+    .verification-section .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #ef4444;
+      display: inline-block;
+    }
+    .verification-section .verified {
+      background: #34d399;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page 1: Loading -->
+  <div id="loading" class="page active">
+    <div class="loader"></div>
+    <h2>Loading... Silicon Savantas</h2>
+  </div>
+
+  <!-- Page 2: Passkey -->
+  <div id="passkey" class="page">
+    <div class="card">
+      <h2>Enter Passkey</h2>
+      <input type="password" id="passInput" placeholder="Enter Key">
+      <button id="checkPass">Submit</button>
+    </div>
+  </div>
+
+  <!-- Page 3: Login/Signup -->
+  <div id="login" class="page">
+    <div class="card">
+      <div class="form-toggle">
+        <button id="loginTab">Login</button>
+        <button id="signupTab">Signup</button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="loginForm">
+        <input type="text" id="loginFullName" placeholder="Full Name" required>
+        <input type="email" id="loginEmail" placeholder="Email" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+
+      <!-- Signup Form -->
+      <form id="signupForm" class="hidden">
+        <input type="text" id="signupFirstName" placeholder="First Name" required>
+        <input type="text" id="signupLastName" placeholder="Last Name" required>
+        <input type="email" id="signupEmail" placeholder="Email" required>
+        <input type="password" id="signupPassword" placeholder="Password" required>
+        <input type="password" id="signupConfirmPassword" placeholder="Confirm Password" required>
+        <button type="submit">Signup</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Page 4: Welcome -->
+  <div id="welcome" class="page">
+    <div class="card">
+      <h1>🎉 Welcome — Silicon Savantas 🎉</h1>
+      <p>
+        We are truly excited to welcome you to the Silicon Savantas community. 
+        This platform is built to inspire growth, innovation, and collaboration 
+        among learners and creators from around the globe. By joining us, you 
+        have taken an important step toward expanding your knowledge, sharpening 
+        your skills, and connecting with a network of like-minded individuals 
+        who believe in building for the future. Here, you will discover 
+        opportunities to learn new technologies, explore creative ideas, and 
+        collaborate on projects that could shape tomorrow. Our mission is to 
+        make learning engaging, accessible, and practical, so every session, 
+        course, and interaction you experience here is designed to add value to 
+        your journey. We encourage you to stay curious, ask questions, and push 
+        your boundaries because this is more than just a platform—it is a 
+        movement. Together, we can create something extraordinary. Welcome 
+        aboard, and let's make this journey an unforgettable one.
+      </p>
+      <button onclick="showPage('dashboard')">Continue to Dashboard</button>
+    </div>
+  </div>
+
+  <!-- Page 5: Admin Dashboard -->
+  <div id="dashboard" class="page">
+    <div class="admin-container">
+      <div class="admin-sidebar">
+        <!-- Main sidebar options (previously sub-options) -->
+        <button class="sidebar-option" onclick="loadSection('courses')">
+          <i class="fas fa-book"></i> Courses
+        </button>
+        <button class="sidebar-option" onclick="loadSection('assignments')">
+          <i class="fas fa-tasks"></i> Assignments
+        </button>
+        <button class="sidebar-option" onclick="loadSection('write-assignments')">
+          <i class="fas fa-pen"></i> Write Assignments
+        </button>
+        <button class="sidebar-option" onclick="loadSection('certificates')">
+          <i class="fas fa-certificate"></i> Certificates
+        </button>
+        <button class="sidebar-option" onclick="loadSection('internships')">
+          <i class="fas fa-briefcase"></i> Internships
+        </button>
+        <button class="sidebar-option" onclick="loadSection('jobs')">
+          <i class="fas fa-building"></i> Jobs
+        </button>
+        <button class="sidebar-option" onclick="loadSection('hackathons')">
+          <i class="fas fa-trophy"></i> Hackathons
+        </button>
+        <button class="sidebar-option" onclick="loadSection('events')">
+          <i class="fas fa-calendar-alt"></i> Events
+        </button>
+        <button class="sidebar-option" onclick="loadSection('profile')">
+          <i class="fas fa-user"></i> Profile
+        </button>
+        <button class="sidebar-option" onclick="loadSection('settings')">
+          <i class="fas fa-cog"></i> Settings
+        </button>
+        <button class="sidebar-option" onclick="loadSection('teamwork')">
+          <i class="fas fa-users"></i> Team Work
+        </button>
+        <button class="sidebar-option" onclick="promptVerifyAssignments()">
+          <i class="fas fa-check-circle"></i> Verify Assignments
+        </button>
+        <button class="sidebar-option" onclick="showPage('login')">
+          <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+      </div>
+      <div class="admin-main">
+        <div class="admin-header">
+          <div><strong>SILICON SAVANTAS</strong></div>
+          <div class="admin-nav">
+            <button onclick="loadSection('profile')"><i class="fas fa-user"></i> Profile</button>
+            <button onclick="loadSection('settings')"><i class="fas fa-cog"></i> Settings</button>
+            <button onclick="showPage('login')"><i class="fas fa-sign-out-alt"></i> Logout</button>
+          </div>
+        </div>
+        <div class="admin-content">
+          <div id="admin-content">
+            <h2>Welcome to Our Team</h2>
+            <p>Select a section from the navigation to manage content.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notification Toast -->
+  <div id="notification" class="notification"></div>
+
+  <script>
+    // User data storage
+    let currentUser = null;
+    let userSettings = {
+      darkMode: true,
+      fontSize: 'Medium',
+      language: 'English',
+      emailNotifications: true,
+      pushNotifications: false,
+      assignmentReminders: true,
+      eventReminders: true,
+      twoFactorAuth: false
+    };
+
+    // Initialize user accounts from localStorage or create default
+    function initializeUserAccounts() {
+      if (!localStorage.getItem('userAccounts')) {
+        const defaultAccounts = [
+          {
+            id: 1,
+            fullName: 'John Doe',
+            email: 'john@example.com',
+            password: 'password123',
+            phone: '+1 (555) 123-4567',
+            location: 'San Francisco, CA',
+            position: 'Senior Developer',
+            department: 'Engineering',
+            experience: '5+ years',
+            skills: 'JavaScript, React, Node.js, Python',
+            verified: true,
+            initials: 'JD'
+          },
+          {
+            id: 2,
+            fullName: 'Jane Smith',
+            email: 'jane@example.com',
+            password: 'password456',
+            phone: '+1 (555) 987-6543',
+            location: 'New York, NY',
+            position: 'UX Designer',
+            department: 'Design',
+            experience: '3+ years',
+            skills: 'UI/UX, Figma, Adobe Creative Suite',
+            verified: false,
+            initials: 'JS'
+          }
+        ];
+        localStorage.setItem('userAccounts', JSON.stringify(defaultAccounts));
+      }
+    }
+
+    // Get all user accounts
+    function getUserAccounts() {
+      return JSON.parse(localStorage.getItem('userAccounts')) || [];
+    }
+
+    // Save user accounts
+    function saveUserAccounts(accounts) {
+      localStorage.setItem('userAccounts', JSON.stringify(accounts));
+    }
+
+    // Find user by email
+    function findUserByEmail(email) {
+      const accounts = getUserAccounts();
+      return accounts.find(account => account.email === email);
+    }
+
+    // Find user by ID
+    function findUserById(id) {
+      const accounts = getUserAccounts();
+      return accounts.find(account => account.id === id);
+    }
+
+    // Update user account
+    function updateUserAccount(updatedUser) {
+      const accounts = getUserAccounts();
+      const index = accounts.findIndex(account => account.id === updatedUser.id);
+      if (index !== -1) {
+        accounts[index] = updatedUser;
+        saveUserAccounts(accounts);
+        return true;
+      }
+      return false;
+    }
+
+    // Send user details to admin email
+    function sendUserDetailsToAdmin(user) {
+      // In a real application, this would make an API call to a backend service
+      // that would send the email. For this demo, we'll simulate it with a notification.
+      
+      // Create a formatted message with user details
+      const userDetails = `
+        User Details Update:
+        
+        Name: ${user.fullName}
+        Email: ${user.email}
+        Phone: ${user.phone || 'Not provided'}
+        Location: ${user.location || 'Not provided'}
+        Position: ${user.position || 'Not provided'}
+        Department: ${user.department || 'Not provided'}
+        Experience: ${user.experience || 'Not provided'}
+        Skills: ${user.skills || 'Not provided'}
+        Account Status: ${user.verified ? 'Verified' : 'Not Verified'}
+        
+        Updated at: ${new Date().toLocaleString()}
+      `;
+      
+      // In a real implementation, you would use EmailJS, SendGrid, or another email service
+      // to send this information to palakondavishnu42@gmail.com
+      
+      console.log('Sending user details to admin:', userDetails);
+      showNotification('User details sent to admin email!');
+    }
+
+    // Send verification email to user
+    function sendVerificationEmailToUser(user) {
+      // In a real application, this would make an API call to a backend service
+      // that would send the email. For this demo, we'll simulate it with a notification.
+      
+      // Create a verification message
+      const verificationMessage = `
+        Dear ${user.fullName},
+        
+        Thank you for registering with Silicon Savantas. Please verify your account by clicking the link below:
+        
+        https://siliconsavantas.com/verify?email=${encodeURIComponent(user.email)}&token=${user.id}
+        
+        This link will expire in 24 hours.
+        
+        If you did not create an account, please ignore this email.
+        
+        Best regards,
+        The Silicon Savantas Team
+      `;
+      
+      // In a real implementation, you would use EmailJS, SendGrid, or another email service
+      // to send this verification email to the user
+      
+      console.log('Sending verification email to user:', verificationMessage);
+      showNotification(`Verification email sent to ${user.email}!`);
+    }
+
+    const pages = {
+      loading: document.getElementById("loading"),
+      passkey: document.getElementById("passkey"),
+      login: document.getElementById("login"),
+      welcome: document.getElementById("welcome"),
+      dashboard: document.getElementById("dashboard")
+    };
+
+    function showPage(id) {
+      Object.values(pages).forEach(p => p.classList.remove("active"));
+      pages[id].classList.add("active");
+    }
+
+    // Show notification
+    function showNotification(message, duration = 3000) {
+      const notification = document.getElementById("notification");
+      notification.textContent = message;
+      notification.style.display = "block";
+      
+      setTimeout(() => {
+        notification.style.display = "none";
+      }, duration);
+    }
+
+    // Initialize user accounts
+    initializeUserAccounts();
+
+    // Page 1 → Page 2
+    setTimeout(() => { showPage("passkey"); }, 3000);
+
+    // Passkey check
+    document.getElementById("checkPass").addEventListener("click", () => {
+      const key = document.getElementById("passInput").value;
+      if (key === "HACKER_IN") {
+        showNotification("Access Granted ✅");
+        showPage("login");
+      } else {
+        showNotification("Wrong Key ❌");
+      }
+    });
+
+    // Toggle Login/Signup
+    const loginTab = document.getElementById("loginTab");
+    const signupTab = document.getElementById("signupTab");
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+
+    loginTab.addEventListener("click", () => {
+      loginForm.classList.remove("hidden");
+      signupForm.classList.add("hidden");
+    });
+
+    signupTab.addEventListener("click", () => {
+      signupForm.classList.remove("hidden");
+      loginForm.classList.add("hidden");
+    });
+
+    // Login form submission
+    loginForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const fullName = document.getElementById("loginFullName").value;
+      const email = document.getElementById("loginEmail").value;
+      const password = document.getElementById("loginPassword").value;
+      
+      // Check if user exists
+      const user = findUserByEmail(email);
+      
+      if (user && user.password === password) {
+        currentUser = user;
+        showNotification(`Welcome back, ${user.fullName}!`);
+        showPage("welcome");
+      } else if (user) {
+        showNotification("Incorrect password!");
+      } else {
+        showNotification("Account not found! Please sign up first.");
+      }
+    });
+
+    // Signup form submission
+    signupForm.addEventListener("submit", e => {
+      e.preventDefault();
+      const firstName = document.getElementById("signupFirstName").value;
+      const lastName = document.getElementById("signupLastName").value;
+      const email = document.getElementById("signupEmail").value;
+      const password = document.getElementById("signupPassword").value;
+      const confirmPassword = document.getElementById("signupConfirmPassword").value;
+      
+      if (password !== confirmPassword) {
+        showNotification("Passwords do not match!");
+        return;
+      }
+      
+      // Check if email already exists
+      const existingUser = findUserByEmail(email);
+      if (existingUser) {
+        showNotification("An account with this email already exists!");
+        return;
+      }
+      
+      // Create new user
+      const accounts = getUserAccounts();
+      const newUser = {
+        id: accounts.length > 0 ? Math.max(...accounts.map(a => a.id)) + 1 : 1,
+        fullName: `${firstName} ${lastName}`,
+        email,
+        password,
+        phone: '',
+        location: '',
+        position: '',
+        department: '',
+        experience: '',
+        skills: '',
+        verified: false,
+        initials: `${firstName[0]}${lastName[0]}`.toUpperCase()
+      };
+      
+      accounts.push(newUser);
+      saveUserAccounts(accounts);
+      
+      currentUser = newUser;
+      showNotification(`Account created successfully! Welcome, ${firstName}!`);
+      
+      // Send verification email to user
+      sendVerificationEmailToUser(newUser);
+      
+      showPage("welcome");
+    });
+
+    // Frontend Courses Data - Updated with notes
+    const frontendCourses = {
+      react: [
+        {
+          day: "Day 1: Introduction to React", 
+          link: "https://reactjs.org/docs/getting-started.html",
+          notes: [
+            "React is a JavaScript library for building user interfaces.",
+            "It is maintained by Facebook and a community of developers.",
+            "React can be used as a base in the development of single-page or mobile applications.",
+            "React is declarative, which makes it easier to reason about your application.",
+            "React is component-based, allowing you to build encapsulated components.",
+            "React learns once, write anywhere: Build mobile apps using React Native."
+          ]
+        },
+        {
+          day: "Day 2: State & Props", 
+          link: "https://reactjs.org/docs/components-and-props.html",
+          notes: [
+            "State is mutable data that affects the component's rendering.",
+            "Props are read-only data passed from parent to child components.",
+            "State changes trigger re-renders of the component.",
+            "Props allow components to be customized and reused.",
+            "State should be managed as close to where it's needed as possible.",
+            "Props enable one-way data flow in React applications."
+          ]
+        },
+        {
+          day: "Day 3: Lifecycle Methods", 
+          link: "https://reactjs.org/docs/state-and-lifecycle.html",
+          notes: [
+            "Lifecycle methods are special methods in React components.",
+            "componentDidMount() is called after the component is rendered.",
+            "componentDidUpdate() is called after updates to props or state.",
+            "componentWillUnmount() is called before the component is destroyed.",
+            "Lifecycle methods allow you to run code at specific points.",
+            "With hooks, lifecycle methods are replaced by useEffect."
+          ]
+        },
+        {
+          day: "Day 4: Event Handling", 
+          link: "https://reactjs.org/docs/handling-events.html",
+          notes: [
+            "React events are named using camelCase rather than lowercase.",
+            "With JSX, you pass a function as the event handler.",
+            "You can prevent default behavior with event.preventDefault().",
+            "Event handlers receive a synthetic event object.",
+            "React pools synthetic events for performance reasons.",
+            "Event handlers can be defined as class methods or arrow functions."
+          ]
+        },
+        {
+          day: "Day 5: Hooks", 
+          link: "https://reactjs.org/docs/hooks-intro.html",
+          notes: [
+            "Hooks let you use state and other React features without classes.",
+            "useState is the most commonly used Hook for adding state.",
+            "useEffect lets you perform side effects in function components.",
+            "Hooks are JavaScript functions with special rules.",
+            "You can build your own Hooks to reuse stateful logic.",
+            "Hooks work side-by-side with existing code."
+          ]
+        },
+        {
+          day: "Day 6: Routing", 
+          link: "https://reactrouter.com/en/main",
+          notes: [
+            "React Router is a standard library for routing in React.",
+            "It enables navigation between views from different components.",
+            "BrowserRouter uses the browser's History API.",
+            "Route components match a path to a component.",
+            "Link components create navigation links.",
+            "useParams hook allows access to URL parameters."
+          ]
+        },
+        {
+          day: "Day 7: Best Practices", 
+          link: "https://reactjs.org/docs/optimizing-performance.html",
+          notes: [
+            "Keep components small and focused on a single task.",
+            "Use functional components with hooks for better readability.",
+            "Avoid unnecessary re-renders with React.memo and useMemo.",
+            "Organize your project structure logically.",
+            "Use PropTypes or TypeScript for type checking.",
+            "Write tests for your components using Jest and React Testing Library."
+          ]
+        }
+      ],
+      vue: [
+        {
+          day: "Day 1: Introduction to Vue.js", 
+          link: "https://vuejs.org/guide/introduction.html",
+          notes: [
+            "Vue.js is a progressive JavaScript framework.",
+            "It is designed to be incrementally adoptable.",
+            "The core library focuses on the view layer only.",
+            "Vue is approachable for beginners and powerful for experts.",
+            "It integrates well with other libraries or existing projects.",
+            "Vue is maintained by an active community and core team."
+          ]
+        },
+        {
+          day: "Day 2: Vue Instance & Data Binding", 
+          link: "https://vuejs.org/guide/essentials/template-syntax.html",
+          notes: [
+            "Every Vue application starts by creating a new Vue instance.",
+            "Data binding connects your data to the DOM.",
+            "Interpolation uses double curly braces {{ }}.",
+            "v-bind directive binds attributes to expressions.",
+            "v-model creates two-way data binding on form inputs.",
+            "Computed properties are cached based on their dependencies."
+          ]
+        },
+        {
+          day: "Day 3: Computed & Methods", 
+          link: "https://vuejs.org/guide/essentials/computed.html",
+          notes: [
+            "Computed properties are used for complex logic.",
+            "They are cached based on their dependencies.",
+            "Methods are called whenever a re-render happens.",
+            "Computed properties are preferred for data that depends on other data.",
+            "Methods are used for event handling or when you need reactivity.",
+            "Watchers are for performing side effects in response to data changes."
+          ]
+        },
+        {
+          day: "Day 4: Vue Directives", 
+          link: "https://vuejs.org/guide/essentials/template-syntax.html#directives",
+          notes: [
+            "Directives are special attributes with the v- prefix.",
+            "v-if conditionally renders elements.",
+            "v-for renders a list of items based on an array.",
+            "v-on attaches event listeners to elements.",
+            "v-show toggles the display CSS property of an element.",
+            "v-html updates the element's innerHTML."
+          ]
+        },
+        {
+          day: "Day 5: Components", 
+          link: "https://vuejs.org/guide/essentials/component-basics.html",
+          notes: [
+            "Components are reusable Vue instances with a name.",
+            "Props are custom attributes you can register on a component.",
+            "Events allow child components to communicate with parents.",
+            "Slots distribute content in components.",
+            "Single-file components contain template, script, and style.",
+            "Components can be registered globally or locally."
+          ]
+        },
+        {
+          day: "Day 6: Vue Router", 
+          link: "https://router.vuejs.org/",
+          notes: [
+            "Vue Router is the official router for Vue.js.",
+            "It deeply integrates with Vue.js core to make building SPAs easy.",
+            "Routes map URLs to components.",
+            "Dynamic routing allows you to pass parameters.",
+            "Nested routes enable complex layouts.",
+            "Navigation guards control access to routes."
+          ]
+        },
+        {
+          day: "Day 7: Vuex & Best Practices", 
+          link: "https://vuex.vuejs.org/",
+          notes: [
+            "Vuex is a state management pattern and library for Vue.",
+            "It serves as a centralized store for all components.",
+            "The state is single source of truth.",
+            "Mutations are the only way to change state in a Vuex store.",
+            "Actions commit mutations and can contain asynchronous operations.",
+            "Best practices include keeping components simple and using Vuex for shared state."
+          ]
+        }
+      ],
+      svelte: [
+        {
+          day: "Day 1: Introduction to Svelte", 
+          link: "https://svelte.dev/tutorial/basics",
+          notes: [
+            "Svelte is a radical new approach to building user interfaces.",
+            "It is a compiler that takes your declarative components.",
+            "It converts them into efficient JavaScript that surgically updates the DOM.",
+            "Svelte has no virtual DOM, making it faster.",
+            "It produces highly optimized vanilla JavaScript.",
+            "Svelte reduces the amount of code you need to write."
+          ]
+        },
+        {
+          day: "Day 2: Setup & Reactive Variables", 
+          link: "https://svelte.dev/tutorial/reactive-declarations",
+          notes: [
+            "Svelte projects can be set up with degit or the Svelte template.",
+            "Reactive variables are declared with let or const.",
+            "Reactivity is triggered by assignment.",
+            "Svelte tracks dependencies and updates the DOM when values change.",
+            "$: syntax marks statements as reactive.",
+            "Reactive declarations run whenever their dependencies change."
+          ]
+        },
+        {
+          day: "Day 3: Components", 
+          link: "https://svelte.dev/tutorial/components",
+          notes: [
+            "Components are the building blocks of Svelte applications.",
+            "They are written in .svelte files.",
+            "Components can be imported and used in other components.",
+            "Props are passed to components using attributes.",
+            "Export statements declare props.",
+            "Components can emit events using the createEventDispatcher function."
+          ]
+        },
+        {
+          day: "Day 4: Events & Bindings", 
+          link: "https://svelte.dev/tutorial/event-handlers",
+          notes: [
+            "DOM events can be listened to with on:eventname.",
+            "Event modifiers like once, preventDefault, and stopPropagation can be used.",
+            "Component events are dispatched with createEventDispatcher.",
+            "Data binding is done with bind:value.",
+            "Two-way binding simplifies form handling.",
+            "Group inputs can be bound with bind:group."
+          ]
+        },
+        {
+          day: "Day 5: Stores", 
+          link: "https://svelte.dev/tutorial/writable-stores",
+          notes: [
+            "Stores are global objects that hold reactive state.",
+            "Writable stores can be updated from anywhere.",
+            "Readable stores are read-only.",
+            "Derived stores compute values from other stores.",
+            "Stores can be subscribed to with the $ syntax.",
+            "Auto-subscription happens when referencing a store with $."
+          ]
+        },
+        {
+          day: "Day 6: Transitions & Animations", 
+          link: "https://svelte.dev/tutorial/transition",
+          notes: [
+            "Svelte has built-in transitions for elements entering and leaving the DOM.",
+            "The transition directive specifies the transition function.",
+            "Common transitions include fade, fly, and slide.",
+            "Custom transitions can be created with CSS.",
+            "Animations can be applied to elements with the animate directive.",
+            "Key blocks allow items to be animated when reordered."
+          ]
+        },
+        {
+          day: "Day 7: Best Practices", 
+          link: "https://kit.svelte.dev/",
+          notes: [
+            "Keep components small and focused.",
+            "Use stores for state that needs to be shared across components.",
+            "Prefer derived stores for computed values.",
+            "Use SvelteKit for building full-stack applications.",
+            "Organize your project with clear folder structures.",
+            "Take advantage of Svelte's reactivity system to minimize code."
+          ]
+        }
+      ],
+      angular: [
+        {
+          day: "Day 1: Introduction to Angular", 
+          link: "https://angular.io/start",
+          notes: [
+            "Angular is a platform for building mobile and desktop web applications.",
+            "It is built on TypeScript, which compiles to JavaScript.",
+            "Angular uses HTML as the template language.",
+            "It extends HTML with directives to bind data to the DOM.",
+            "Angular provides dependency injection for services.",
+            "It is maintained by the Angular Team at Google."
+          ]
+        },
+        {
+          day: "Day 2: Templates & Data Binding", 
+          link: "https://angular.io/guide/template-syntax",
+          notes: [
+            "Templates are HTML with Angular markup.",
+            "Interpolation {{ }} displays component data.",
+            "Property binding [] sets element properties.",
+            "Event binding () responds to user events.",
+            "Two-way binding [(ngModel)] combines property and event binding.",
+            "Template expressions are JavaScript-like code snippets."
+          ]
+        },
+        {
+          day: "Day 3: Components & Services", 
+          link: "https://angular.io/guide/architecture-components",
+          notes: [
+            "Components control views through templates.",
+            "They have a lifecycle managed by Angular.",
+            "Services are classes with a specific purpose.",
+            "Dependency injection makes services available to components.",
+            "@Injectable decorator marks a class as available for DI.",
+            "Components should be lean and delegate complex tasks to services."
+          ]
+        },
+        {
+          day: "Day 4: Routing", 
+          link: "https://angular.io/guide/router",
+          notes: [
+            "Angular Router enables navigation between views.",
+            "Routes map URLs to components.",
+            "RouterOutlet is a placeholder for routed components.",
+            "RouterLink creates navigation links.",
+            "Route parameters can be accessed with ActivatedRoute.",
+            "Route guards control access to routes."
+          ]
+        },
+        {
+          day: "Day 5: Forms", 
+          link: "https://angular.io/guide/forms-overview",
+          notes: [
+            "Angular supports two types of forms: template-driven and reactive.",
+            "Template-driven forms use directives in the template.",
+            "Reactive forms are more scalable and robust.",
+            "FormBuilder simplifies creating form controls.",
+            "Validators ensure user input meets requirements.",
+            "Form groups manage collections of form controls."
+          ]
+        },
+        {
+          day: "Day 6: HttpClient", 
+          link: "https://angular.io/guide/http",
+          notes: [
+            "HttpClient enables communication with remote servers.",
+            "It returns Observable responses from HTTP requests.",
+            "Interceptors can transform requests and responses.",
+            "HTTP headers can be set for requests.",
+            "Error handling is done with catchError operator.",
+            "HttpClientModule must be imported to use HttpClient."
+          ]
+        },
+        {
+          day: "Day 7: Best Practices", 
+          link: "https://angular.io/guide/styleguide",
+          notes: [
+            "Follow the Angular style guide for consistency.",
+            "Use single responsibility principle for components.",
+            "Keep components small and focused.",
+            "Use trackBy with ngFor for performance.",
+            "Lazy load modules for faster initial load.",
+            "Use Angular CLI for generating and building projects."
+          ]
+        }
+      ],
+      git: [
+        {
+          day: "Day 1: Introduction to Git", 
+          link: "https://git-scm.com/book/en/v2/Getting-Started-About-Version-Control",
+          notes: [
+            "Git is a distributed version control system.",
+            "It tracks changes in source code during software development.",
+            "Git was created by Linus Torvalds in 2005.",
+            "Every Git working directory is a full repository.",
+            "Git has a staging area for commits.",
+            "It supports non-linear development through branches."
+          ]
+        },
+        {
+          day: "Day 2: Workflow", 
+          link: "https://git-scm.com/docs",
+          notes: [
+            "Git workflow includes cloning, modifying, committing, and pushing.",
+            "git init creates a new Git repository.",
+            "git clone copies an existing repository.",
+            "git status shows the state of the working directory.",
+            "git add stages changes for the next commit.",
+            "git commit records changes to the repository."
+          ]
+        },
+        {
+          day: "Day 3: Branching & Merging", 
+          link: "https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell",
+          notes: [
+            "Branches allow you to diverge from the main line.",
+            "git branch creates, lists, or deletes branches.",
+            "git checkout switches branches.",
+            "git merge integrates changes from another branch.",
+            "Fast-forward moves the branch pointer forward.",
+            "Three-way merge creates a new commit with changes from both branches."
+          ]
+        },
+        {
+          day: "Day 4: GitHub Intro", 
+          link: "https://docs.github.com/en/get-started/quickstart",
+          notes: [
+            "GitHub is a web-based hosting service for Git repositories.",
+            "It provides distributed version control and source code management.",
+            "GitHub offers features like issue tracking and wikis.",
+            "Repositories can be public or private.",
+            "Pull requests propose changes to a repository.",
+            "GitHub Actions enable continuous integration and deployment."
+          ]
+        },
+        {
+          day: "Day 5: Collaboration", 
+          link: "https://docs.github.com/en/pull-requests",
+          notes: [
+            "Forking creates a personal copy of a repository.",
+            "Cloning downloads the repository to your local machine.",
+            "Creating a branch isolates your work.",
+            "Committing saves changes to your branch.",
+            "Pushing uploads your changes to GitHub.",
+            "Creating a pull request proposes your changes for review."
+          ]
+        },
+        {
+          day: "Day 6: Resolving Conflicts", 
+          link: "https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging",
+          notes: [
+            "Conflicts occur when Git cannot automatically merge changes.",
+            "Git marks conflicted files with special markers.",
+            "You must manually resolve the conflicts.",
+            "After resolving, use git add to mark as resolved.",
+            "Then commit to complete the merge.",
+            "Good communication helps prevent conflicts."
+          ]
+        },
+        {
+          day: "Day 7: Best Practices", 
+          link: "https://git-scm.com/book/en/v2/Git-Best-Practices",
+          notes: [
+            "Commit often with small, logical changes.",
+            "Write clear and descriptive commit messages.",
+            "Keep branches focused on a single feature or fix.",
+            "Regularly pull changes from the main branch.",
+            "Use .gitignore to exclude unnecessary files.",
+            "Review code before merging to maintain quality."
+          ]
+        }
+      ],
+      typescript: [
+        {
+          day: "Day 1: Introduction to TypeScript", 
+          link: "https://www.typescriptlang.org/docs/",
+          notes: [
+            "TypeScript is a typed superset of JavaScript.",
+            "It compiles to plain JavaScript.",
+            "TypeScript adds static type definitions.",
+            "It helps catch errors during development.",
+            "TypeScript supports the latest JavaScript features.",
+            "It provides better tooling and IDE support."
+          ]
+        },
+        {
+          day: "Day 2: Basic Types", 
+          link: "https://www.typescriptlang.org/docs/handbook/basic-types.html",
+          notes: [
+            "TypeScript supports basic types like string, number, and boolean.",
+            "Arrays can be typed using type[] or Array<type>.",
+            "Tuples represent arrays with fixed types and lengths.",
+            "Enum allows defining named constants.",
+            "Any type opt-out of type checking.",
+            "Void type indicates no return value."
+          ]
+        },
+        {
+          day: "Day 3: Functions & Interfaces", 
+          link: "https://www.typescriptlang.org/docs/handbook/interfaces.html",
+          notes: [
+            "Functions can have typed parameters and return types.",
+            "Optional parameters use ? in the parameter name.",
+            "Default parameters provide default values.",
+            "Rest parameters allow multiple arguments as an array.",
+            "Interfaces define contracts for objects.",
+            "Interfaces can extend other interfaces."
+          ]
+        },
+        {
+          day: "Day 4: Classes & Modules", 
+          link: "https://www.typescriptlang.org/docs/handbook/classes.html",
+          notes: [
+            "Classes support object-oriented programming.",
+            "Access modifiers control visibility: public, private, protected.",
+            "Readonly properties prevent modification after initialization.",
+            "Constructors initialize class instances.",
+            "Inheritance allows classes to extend other classes.",
+            "Modules organize code into separate files."
+          ]
+        },
+        {
+          day: "Day 5: Generics", 
+          link: "https://www.typescriptlang.org/docs/handbook/generics.html",
+          notes: [
+            "Generics allow creating reusable components.",
+            "Type variables capture types the user provides.",
+            "Generic functions work with multiple types.",
+            "Generic interfaces define contracts with types.",
+            "Generic classes have generic properties and methods.",
+            "Generic constraints limit types that can be used."
+          ]
+        },
+        {
+          day: "Day 6: Advanced Types", 
+          link: "https://www.typescriptlang.org/docs/handbook/advanced-types.html",
+          notes: [
+            "Union types allow a variable to be one of several types.",
+            "Intersection types combine multiple types.",
+            "Type guards narrow down types within conditional blocks.",
+            "Type aliases create custom names for types.",
+            "Mapped types transform properties of existing types.",
+            "Conditional types select types based on conditions."
+          ]
+        },
+        {
+          day: "Day 7: Best Practices", 
+          link: "https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-0.html",
+          notes: [
+            "Use strict type checking for better error detection.",
+            "Avoid using any type when possible.",
+            "Prefer interfaces over type aliases for objects.",
+            "Use readonly for immutable data.",
+            "Leverage utility types for common type transformations.",
+            "Keep your types as simple and specific as possible."
+          ]
+        }
+      ],
+      buildtools: [
+        {
+          day: "Day 1: Intro to Build Tools", 
+          link: "https://webpack.js.org/concepts/",
+          notes: [
+            "Build tools automate tasks in the development workflow.",
+            "They bundle modules into a single file or files.",
+            "Build tools optimize assets for production.",
+            "They can transpile newer JavaScript to older versions.",
+            "Build tools can process CSS, images, and other assets.",
+            "Common build tools include Webpack, Vite, and Parcel."
+          ]
+        },
+        {
+          day: "Day 2: Webpack Setup", 
+          link: "https://webpack.js.org/guides/getting-started/",
+          notes: [
+            "Webpack is a module bundler for JavaScript applications.",
+            "It creates a dependency graph of your application.",
+            "Webpack configuration is done in webpack.config.js.",
+            "Entry points define which modules Webpack should use.",
+            "Output tells Webpack where to emit bundles.",
+            "Loaders transform files into modules."
+          ]
+        },
+        {
+          day: "Day 3: Entry & Output", 
+          link: "https://webpack.js.org/concepts/entry-points/",
+          notes: [
+            "Entry points indicate which module Webpack should use.",
+            "Single entry syntax uses a string for the entry point.",
+            "Object syntax can have multiple entry points.",
+            "Output configuration tells Webpack where to emit bundles.",
+            "You can specify the filename and output path.",
+            "Multiple entry points can have multiple outputs."
+          ]
+        },
+        {
+          day: "Day 4: Loaders & Plugins", 
+          link: "https://webpack.js.org/concepts/loaders/",
+          notes: [
+            "Loaders transform files into modules as they're added.",
+            "They can convert TypeScript to JavaScript.",
+            "Loaders can process CSS, SASS, and other styles.",
+            "Plugins perform a wider range of tasks.",
+            "Plugins can optimize bundles and manage assets.",
+            "Common plugins include HtmlWebpackPlugin and CleanWebpackPlugin."
+          ]
+        },
+        {
+          day: "Day 5: Vite Intro", 
+          link: "https://vitejs.dev/guide/",
+          notes: [
+            "Vite is a build tool that aims to provide a faster development experience.",
+            "It uses native ES modules in the browser.",
+            "Vite serves your source code over native ESM.",
+            "It has a fast Hot Module Replacement (HMR).",
+            "Vite uses Rollup for production builds.",
+            "It has built-in TypeScript and JSX support."
+          ]
+        },
+        {
+          day: "Day 6: Vite Config & Plugins", 
+          link: "https://vitejs.dev/config/",
+          notes: [
+            "Vite configuration is in vite.config.js.",
+            "It supports TypeScript and JSX out of the box.",
+            "Plugins extend Vite's functionality.",
+            "Official plugins include Vue, React, and Svelte support.",
+            "Environment variables can be defined in .env files.",
+            "Vite has CSS preprocessor support."
+          ]
+        },
+        {
+          day: "Day 7: Best Practices", 
+          link: "https://webpack.js.org/guides/production/",
+          notes: [
+            "Use separate configurations for development and production.",
+            "Optimize bundles with code splitting.",
+            "Minify CSS and JavaScript for production.",
+            "Use tree shaking to eliminate unused code.",
+            "Cache assets for better performance.",
+            "Monitor bundle sizes with tools like Webpack Bundle Analyzer."
+          ]
+        }
+      ]
+    };
+
+    // Backend Courses Data - Updated with notes
+    const backendCourses = {
+      nodejs: [
+        {
+          day: "Day 1: Intro",
+          link: "https://nodejs.org/en/docs/guides/getting-started-guide/",
+          notes: [
+            "Node.js is a JavaScript runtime built on Chrome's V8 JavaScript engine.",
+            "Node.js uses an event-driven, non-blocking I/O model.",
+            "Node.js is designed to build scalable network applications.",
+            "Node.js has a rich ecosystem of packages available through npm.",
+            "Node.js can be used for both server-side and client-side development.",
+            "Node.js is open source and cross-platform."
+          ]
+        },
+        {
+          day: "Day 2: Modules",
+          link: "https://www.freecodecamp.org/news/node-js-modules-tutorial/",
+          notes: [
+            "Modules are reusable blocks of code in Node.js.",
+            "Node.js has a built-in module system.",
+            "require() function is used to import modules.",
+            "module.exports is used to export modules.",
+            "Core modules are compiled into Node.js binary.",
+            "File modules are user-defined modules."
+          ]
+        },
+        {
+          day: "Day 3: HTTP Server",
+          link: "https://nodejs.org/en/docs/guides/getting-started-guide/",
+          notes: [
+            "HTTP module allows Node.js to transfer data over HTTP.",
+            "createServer() method creates an HTTP server.",
+            "The server listens for incoming requests.",
+            "Request object represents the HTTP request.",
+            "Response object represents the HTTP response.",
+            "end() method signals that all response headers and body have been sent."
+          ]
+        },
+        {
+          day: "Day 4: Express.js",
+          link: "https://expressjs.com/en/starter/installing.html",
+          notes: [
+            "Express.js is a minimal and flexible Node.js web application framework.",
+            "It provides robust set of features for web and mobile applications.",
+            "Express simplifies the process of creating a server.",
+            "Routing refers to how an application's endpoints respond to client requests.",
+            "Middleware functions have access to the request and response objects.",
+            "Express is unopinionated, allowing you to structure your application as you see fit."
+          ]
+        },
+        {
+          day: "Day 5: Database",
+          link: "https://mongoosejs.com/docs/guide.html",
+          notes: [
+            "MongoDB is a NoSQL database that stores data in flexible, JSON-like documents.",
+            "Mongoose is an Object Data Modeling (ODM) library for MongoDB and Node.js.",
+            "Mongoose manages relationships between data.",
+            "Schema maps to a MongoDB collection.",
+            "Models are compiled from Schema definitions.",
+            "Mongoose provides schema validation and business logic."
+          ]
+        },
+        {
+          day: "Day 6: Auth & Security",
+          link: "https://www.digitalocean.com/community/tutorials/nodejs-jwt-expressjs",
+          notes: [
+            "Authentication verifies the identity of a user.",
+            "Authorization determines what resources a user can access.",
+            "JWT (JSON Web Tokens) is a standard for creating access tokens.",
+            "bcrypt is used to hash passwords securely.",
+            "HTTPS should be used to encrypt data in transit.",
+            "Helmet helps secure Express apps by setting HTTP headers."
+          ]
+        },
+        {
+          day: "Day 7: Deployment",
+          link: "https://www.heroku.com/nodejs",
+          notes: [
+            "Deployment makes your application accessible on the internet.",
+            "Heroku is a platform as a service (PaaS) that enables developers to build, run, and operate applications.",
+            "Process managers like PM2 keep Node.js applications alive forever.",
+            "Environment variables should be used for configuration.",
+            "Logging helps monitor and debug applications.",
+            "Continuous deployment automates the release process."
+          ]
+        }
+      ],
+      python: [
+        {
+          day: "Day 1: Basics",
+          link: "https://www.python.org/downloads/",
+          notes: [
+            "Python is a high-level, interpreted programming language.",
+            "It emphasizes code readability with its notable use of significant whitespace.",
+            "Python is dynamically typed and garbage-collected.",
+            "It supports multiple programming paradigms.",
+            "Python was created by Guido van Rossum and first released in 1991.",
+            "Python has a comprehensive standard library."
+          ]
+        },
+        {
+          day: "Day 2: Data Types",
+          link: "https://www.w3schools.com/python/",
+          notes: [
+            "Python has several built-in data types.",
+            "Numeric types include int, float, and complex.",
+            "Sequence types include list, tuple, and range.",
+            "Text type is str.",
+            "Mapping type is dict.",
+            "Set types are set and frozenset."
+          ]
+        },
+        {
+          day: "Day 3: Control Flow",
+          link: "https://www.w3schools.com/python/",
+          notes: [
+            "Conditional statements execute code based on conditions.",
+            "if, elif, and else keywords are used for conditionals.",
+            "Loops execute code repeatedly.",
+            "for loop iterates over a sequence.",
+            "while loop repeats as long as a condition is true.",
+            "break and control loop execution."
+          ]
+        },
+        {
+          day: "Day 4: Functions",
+          link: "https://www.w3schools.com/python/",
+          notes: [
+            "Functions are blocks of reusable code.",
+            "def keyword starts a function definition.",
+            "Functions can take parameters.",
+            "return statement exits a function.",
+            "Functions can return multiple values.",
+            "Functions can have default parameter values."
+          ]
+        },
+        {
+          day: "Day 5: Modules",
+          link: "https://www.w3schools.com/python/",
+          notes: [
+            "Modules are files containing Python definitions and statements.",
+            "import statement imports a module.",
+            "from...import imports specific attributes.",
+            "dir() function lists module attributes.",
+            "Python standard library contains many modules.",
+            "pip installs additional packages."
+          ]
+        },
+        {
+          day: "Day 6: File I/O",
+          link: "https://www.w3schools.com/python/",
+          notes: [
+            "Files are opened with open() function.",
+            "File modes include 'r' for read, 'w' for write, and 'a' for append.",
+            "with statement ensures proper resource cleanup.",
+            "read() method reads entire file.",
+            "readline() reads one line at a time.",
+            "write() method writes to a file."
+          ]
+        },
+        {
+          day: "Day 7: Exception Handling",
+          link: "https://www.w3schools.com/python/",
+          notes: [
+            "Exceptions are errors that occur during execution.",
+            "try block lets you test a block of code for errors.",
+            "except block lets you handle the error.",
+            "finally block lets you execute code regardless of errors.",
+            "raise statement triggers an exception.",
+            "Custom exceptions can be defined."
+          ]
+        }
+      ],
+      java: [
+        {
+          day: "Day 1: Basics",
+          link: "https://www.oracle.com/java/technologies/downloads/",
+          notes: [
+            "Java is a class-based, object-oriented programming language.",
+            "It is designed to have as few implementation dependencies as possible.",
+            "Java applications are compiled to bytecode that runs on JVM.",
+            "Java is platform-independent.",
+            "Java was developed by Sun Microsystems and acquired by Oracle.",
+            "Java syntax is similar to C and C++."
+          ]
+        },
+        {
+          day: "Day 2: OOP Concepts",
+          link: "https://www.w3schools.com/java/",
+          notes: [
+            "Object-oriented programming organizes software design around data.",
+            "Classes are blueprints for objects.",
+            "Objects are instances of classes.",
+            "Encapsulation bundles data and methods together.",
+            "Inheritance allows a class to inherit from another class.",
+            "Polymorphism allows methods to do different things based on the object."
+          ]
+        },
+        {
+          day: "Day 3: Control Statements",
+          link: "https://www.w3schools.com/java/",
+          notes: [
+            "Control statements determine the flow of execution.",
+            "if-else statements make decisions.",
+            "switch statement selects one of many code blocks.",
+            "for loop repeats a block of code a specific number of times.",
+            "while loop repeats as long as a condition is true.",
+            "do-while loop executes at least once."
+          ]
+        },
+        {
+          day: "Day 4: Arrays & Collections",
+          link: "https://www.w3schools.com/java/",
+          notes: [
+            "Arrays are containers that hold fixed number of values of a single type.",
+            "ArrayList is a resizable array implementation.",
+            "LinkedList stores elements in containers called nodes.",
+            "HashMap stores key-value pairs.",
+            "HashSet stores unique elements.",
+            "Collections framework provides interfaces and classes."
+          ]
+        },
+        {
+          day: "Day 5: Exception Handling",
+          link: "https://www.w3schools.com/java/",
+          notes: [
+            "Exceptions are events that disrupt the normal flow of execution.",
+            "try block contains code that might throw an exception.",
+            "catch block handles the exception.",
+            "finally block always executes regardless of exception.",
+            "throw keyword explicitly throws an exception.",
+            "throws keyword declares exceptions a method might throw."
+          ]
+        },
+        {
+          day: "Day 6: I/O Streams",
+          link: "https://www.w3schools.com/java/",
+          notes: [
+            "Streams are sequences of data.",
+            "InputStream reads data from a source.",
+            "OutputStream writes data to a destination.",
+            "Reader reads characters from a stream.",
+            "Writer writes characters to a stream.",
+            "BufferedReader and BufferedWriter improve performance."
+          ]
+        },
+        {
+          day: "Day 7: Multithreading",
+          link: "https://www.w3schools.com/java/",
+          notes: [
+            "Multithreading allows concurrent execution of two or more threads.",
+            "Threads are lightweight sub-processes.",
+            "Thread class can be extended to create a thread.",
+            "Runnable interface can be implemented to create a thread.",
+            "Synchronization controls access to shared resources.",
+            "Deadlock occurs when threads are blocked forever."
+          ]
+        }
+      ],
+      php: [
+        {
+          day: "Day 1: PHP Basics",
+          link: "https://www.php.net/docs.php",
+          notes: [
+            "PHP is a server-side scripting language.",
+            "It is especially suited for web development.",
+            "PHP code is executed on the server.",
+            "PHP files have extension .php.",
+            "PHP can generate HTML.",
+            "PHP supports many databases."
+          ]
+        },
+        {
+          day: "Day 2: Variables & Data Types",
+          link: "https://www.php.net/docs.php",
+          notes: [
+            "Variables in PHP start with $ sign.",
+            "PHP is loosely typed language.",
+            "Data types include string, integer, float, boolean, array, object, NULL.",
+            "Variables are case-sensitive.",
+            "Variable scope determines where variables can be accessed.",
+            "Superglobals are built-in variables that are always available."
+          ]
+        },
+        {
+          day: "Day 3: Control Structures",
+          link: "https://www.php.net/docs.php",
+          notes: [
+            "Conditional statements include if, else, elseif, and switch.",
+            "Loops include for, while, do-while, and foreach.",
+            "break exits a loop.",
+            "continue skips the current iteration.",
+            "Alternative syntax for control structures exists.",
+            "Control structures can be nested."
+          ]
+        },
+        {
+          day: "Day 4: Functions",
+          link: "https://www.php.net/docs.php",
+          notes: [
+            "Functions are blocks of code that can be reused.",
+            "User-defined functions start with function keyword.",
+            "Functions can take parameters.",
+            "Functions can return values.",
+            "Functions can return multiple values as an array.",
+            "Variable functions allow calling a function using a variable."
+          ]
+        },
+        {
+          day: "Day 5: Arrays",
+          link: "https://www.php.net/docs.php",
+          notes: [
+            "Arrays store multiple values in a single variable.",
+            "Indexed arrays have numeric indices.",
+            "Associative arrays have named keys.",
+            "Multidimensional arrays contain arrays as elements.",
+            "count() function returns the length of an array.",
+            "sort() function sorts an array."
+          ]
+        },
+        {
+          day: "Day 6: Form Handling",
+          link: "https://www.php.net/docs.php",
+          notes: [
+            "PHP superglobals $_GET and $_POST are used to collect form data.",
+            "$_GET collects data from HTML forms using method get.",
+            "$_POST collects data from HTML forms using method post.",
+            "$_REQUEST contains both $_GET, $_POST, and $_COOKIE.",
+            "Form validation ensures data is correct.",
+            "htmlspecialchars() prevents XSS attacks."
+          ]
+        },
+        {
+          day: "Day 7: Database Connectivity",
+          link: "https://www.php.net/docs.php",
+          notes: [
+            "PHP can connect to various databases.",
+            "MySQLi extension allows connection to MySQL databases.",
+            "PDO provides a consistent interface for database access.",
+            "mysqli_connect() opens a connection to MySQL.",
+            "mysqli_query() executes a query.",
+            "mysqli_fetch_assoc() fetches a result row as an associative array."
+          ]
+        }
+      ],
+      go: [
+        {
+          day: "Day 1: Introduction",
+          link: "https://go.dev/dl/",
+          notes: [
+            "Go is an open source programming language.",
+            "It makes it easy to build simple, reliable, and efficient software.",
+            "Go was developed at Google in 2007.",
+            "Go is statically typed and compiled.",
+            "Go has garbage collection.",
+            "Go has built-in concurrency support."
+          ]
+        },
+        {
+          day: "Day 2: Basic Syntax",
+          link: "https://go.dev/doc/",
+          notes: [
+            "Go programs consist of packages.",
+            "Program starts running in package main.",
+            "import statement imports packages.",
+            "func keyword defines a function.",
+            "var keyword declares variables.",
+            ":= is used for short variable declaration."
+          ]
+        },
+        {
+          day: "Day 3: Data Types",
+          link: "https://go.dev/doc/",
+          notes: [
+            "Basic types include bool, string, int, float64.",
+            "Type conversions are explicit.",
+            "Constants are declared with const.",
+            "Arrays have fixed size.",
+            "Slices are dynamic views into arrays.",
+            "Maps are key-value stores."
+          ]
+        },
+        {
+          day: "Day 4: Control Flow",
+          link: "https://go.dev/doc/",
+          notes: [
+            "for is the only loop statement in Go.",
+            "if statements have optional else and else if.",
+            "switch statement can have multiple cases.",
+            "defer schedules a function call to be run after the function completes.",
+            "go statement starts a goroutine.",
+            "select statement allows a goroutine to wait on multiple communication operations."
+          ]
+        },
+        {
+          day: "Day 5: Functions",
+          link: "https://go.dev/doc/",
+          notes: [
+            "Functions can take zero or more parameters.",
+            "Functions can return multiple results.",
+            "Named return values can be used.",
+            "Functions are values and can be passed around.",
+            "Closures are functions that reference variables from outside their body.",
+            "Recursion is supported."
+          ]
+        },
+        {
+          day: "Day 6: Methods and Interfaces",
+          link: "https://go.dev/doc/",
+          notes: [
+            "Methods are functions with a receiver.",
+            "Interfaces define sets of methods.",
+            "Interface values can hold any value that implements those methods.",
+            "Type assertions access the underlying concrete value.",
+            "Empty interface can hold values of any type.",
+            "Type switches compare types."
+          ]
+        },
+        {
+          day: "Day 7: Concurrency",
+          link: "https://go.dev/doc/",
+          notes: [
+            "Goroutines are lightweight threads.",
+            "Channels are typed conduits for values.",
+            "Channels can be buffered or unbuffered.",
+            "Select allows waiting on multiple channel operations.",
+            "Mutexes provide mutual exclusion.",
+            "WaitGroups wait for a collection of goroutines to finish."
+          ]
+        }
+      ]
+    };
+
+    // Database Courses Data - Updated with notes
+    const databaseCourses = {
+      mysql: [
+        {
+          day: "Day 1: Introduction to Databases & MySQL",
+          link: "https://dev.mysql.com/doc/refman/8.0/en/tutorial.html",
+          notes: [
+            "A database is an organized collection of structured information.",
+            "SQL stands for Structured Query Language.",
+            "MySQL is an open-source relational database management system.",
+            "Data in MySQL is organized in tables.",
+            "Tables consist of rows and columns.",
+            "Primary keys uniquely identify each row in a table."
+          ]
+        },
+        {
+          day: "Day 2: Database & Table Basics",
+          link: "https://www.w3schools.com/mysql/mysql_create_db.asp",
+          notes: [
+            "CREATE DATABASE statement creates a new database.",
+            "USE statement selects a database to work with.",
+            "CREATE TABLE statement creates a new table.",
+            "Data types specify the type of data a column can hold.",
+            "NOT NULL constraint ensures a column cannot have NULL value.",
+            "DEFAULT constraint provides a default value for a column."
+          ]
+        },
+        {
+          day: "Day 3: CRUD Operations",
+          link: "https://www.w3schools.com/mysql/mysql_crud.asp",
+          notes: [
+            "INSERT statement adds new rows to a table.",
+            "SELECT statement retrieves data from a table.",
+            "WHERE clause filters records based on conditions.",
+            "UPDATE statement modifies existing records.",
+            "DELETE statement removes records from a table.",
+            "ORDER BY clause sorts the result-set."
+          ]
+        },
+        {
+          day: "Day 4: Advanced Queries",
+          link: "https://www.w3schools.com/mysql/",
+          notes: [
+            "JOIN clauses combine rows from two or more tables.",
+            "INNER JOIN returns records that have matching values in both tables.",
+            "LEFT JOIN returns all records from the left table and matched records from the right table.",
+            "GROUP BY groups rows that have the same values.",
+            "HAVING filters groups based on conditions.",
+            "Aggregate functions perform calculation on multiple values."
+          ]
+        },
+        {
+          day: "Day 5: Indexes",
+          link: "https://www.w3schools.com/mysql/",
+          notes: [
+            "Indexes speed up data retrieval operations.",
+            "CREATE INDEX statement creates an index.",
+            "Indexes can be created on one or more columns.",
+            "Unique indexes ensure all values in a column are unique.",
+            "Composite indexes are created on multiple columns.",
+            "Indexes should be used on columns frequently used in WHERE clauses."
+          ]
+        },
+        {
+          day: "Day 6: Views & Stored Procedures",
+          link: "https://www.w3schools.com/mysql/",
+          notes: [
+            "Views are virtual tables based on result sets of SQL statements.",
+            "CREATE VIEW statement creates a view.",
+            "Views simplify complex queries.",
+            "Stored procedures are prepared SQL code that you can save.",
+            "CREATE PROCEDURE statement creates a stored procedure.",
+            "Stored procedures can accept parameters and return values."
+          ]
+        },
+        {
+          day: "Day 7: Security & Optimization",
+          link: "https://www.w3schools.com/mysql/",
+          notes: [
+            "GRANT statement grants privileges to users.",
+            "REVOKE statement removes privileges from users.",
+            "Prepared statements prevent SQL injection.",
+            "EXPLAIN statement shows the execution plan of a query.",
+            "Normalization reduces data redundancy.",
+            "Backup and recovery strategies are important for data safety."
+          ]
+        }
+      ],
+      postgres: [
+        {
+          day: "Day 1: Introduction & Setup",
+          link: "https://www.postgresql.org/docs/current/tutorial-start.html",
+          notes: [
+            "PostgreSQL is a powerful, open source object-relational database system.",
+            "It has more than 15 years of active development.",
+            "PostgreSQL runs on all major operating systems.",
+            "It is ACID-compliant and transactional.",
+            "PostgreSQL has strong support for SQL standards.",
+            "It supports both SQL and JSON querying."
+          ]
+        },
+        {
+          day: "Day 2: Basic SQL Commands",
+          link: "https://www.postgresql.org/docs/current/tutorial-sql-intro.html",
+          notes: [
+            "psql is the interactive terminal for PostgreSQL.",
+            "\\l command lists all databases.",
+            "\\c command connects to a database.",
+            "\\d command lists tables, views, and sequences.",
+            "CREATE TABLE creates a new table.",
+            "INSERT INTO adds new rows to a table."
+          ]
+        },
+        {
+          day: "Day 3: Advanced Queries",
+          link: "https://www.postgresql.org/docs/current/tutorial-join.html",
+          notes: [
+            "SELECT retrieves data from a table.",
+            "WHERE clause filters rows based on conditions.",
+            "ORDER BY sorts the result set.",
+            "JOIN combines rows from two or more tables.",
+            "GROUP BY groups rows that have the same values.",
+            "HAVING filters groups based on conditions."
+          ]
+        },
+        {
+          day: "Day 4: Functions & Operators",
+          link: "https://www.postgresql.org/docs/current/functions.html",
+          notes: [
+            "PostgreSQL has many built-in functions.",
+            "Aggregate functions perform calculation on a set of values.",
+            "String functions manipulate string values.",
+            "Mathematical functions perform mathematical operations.",
+            "Date/time functions work with date and time values.",
+            "Operators perform arithmetic, comparison, and logical operations."
+          ]
+        },
+        {
+          day: "Day 5: Indexes",
+          link: "https://www.postgresql.org/docs/current/indexes.html",
+          notes: [
+            "Indexes speed up data retrieval.",
+            "B-tree is the default index type in PostgreSQL.",
+            "Hash indexes are suitable for equality comparisons.",
+            "GiST indexes are suitable for geometric data types.",
+            "SP-GiST indexes are suitable for network data types.",
+            "GIN indexes are suitable for multi-value data types."
+          ]
+        },
+        {
+          day: "Day 6: Transactions",
+          link: "https://www.postgresql.org/docs/current/tutorial-transactions.html",
+          notes: [
+            "Transactions ensure data integrity.",
+            "BEGIN starts a transaction block.",
+            "COMMIT commits the current transaction.",
+            "ROLLBACK aborts the current transaction.",
+            "SAVEPOINT creates a savepoint within a transaction.",
+            "ROLLBACK TO SAVEPOINT rolls back to a savepoint."
+          ]
+        },
+        {
+          day: "Day 7: Security & Performance",
+          link: "https://www.postgresql.org/docs/current/security.html",
+          notes: [
+            "PostgreSQL has robust security features.",
+            "Role-based access control manages permissions.",
+            "Row-level security restricts access to rows.",
+            "Encryption protects data at rest and in transit.",
+            "EXPLAIN ANALYZE helps analyze query performance.",
+            "Vacuuming reclaims storage occupied by dead tuples."
+          ]
+        }
+      ],
+      mongo: [
+        {
+          day: "Day 1: Introduction & Setup",
+          link: "https://www.mongodb.com/docs/manual/installation/",
+          notes: [
+            "MongoDB is a document-oriented NoSQL database.",
+            "It stores data in flexible, JSON-like documents.",
+            "Documents are stored in collections.",
+            "MongoDB has dynamic schemas.",
+            "It supports ad-hoc queries, indexing, and real-time aggregation.",
+            "MongoDB provides horizontal scaling through sharding."
+          ]
+        },
+        {
+          day: "Day 2: Basic Operations",
+          link: "https://www.mongodb.com/docs/manual/crud/",
+          notes: [
+            "mongod is the primary daemon process for MongoDB.",
+            "mongo is the interactive shell for MongoDB.",
+            "use command creates or switches to a database.",
+            "db.collection.insertOne() inserts a single document.",
+            "db.collection.find() retrieves documents.",
+            "db.collection.updateOne() updates a single document."
+          ]
+        },
+        {
+          day: "Day 3: Query Documents",
+          link: "https://www.mongodb.com/docs/manual/tutorial/query-documents/",
+          notes: [
+            "Query documents specify the conditions for selection.",
+            "Operators begin with $.",
+            "$eq matches values that are equal to a specified value.",
+            "$gt matches values that are greater than a specified value.",
+            "$in matches any of the values specified in an array.",
+            "$and joins query clauses with a logical AND."
+          ]
+        },
+        {
+          day: "Day 4: Data Modeling",
+          link: "https://www.mongodb.com/docs/manual/core/data-modeling-introduction/",
+          notes: [
+            "Data modeling in MongoDB is different from relational databases.",
+            "Embedded documents store related data in a single document.",
+            "References store relationships between documents.",
+            "One-to-one relationships can be embedded or referenced.",
+            "One-to-many relationships can be embedded or referenced.",
+            "Many-to-many relationships are typically referenced."
+          ]
+        },
+        {
+          day: "Day 5: Indexes",
+          link: "https://www.mongodb.com/docs/manual/indexes/",
+          notes: [
+            "Indexes support efficient execution of queries.",
+            "db.collection.createIndex() creates an index.",
+            "Default index is created on the _id field.",
+            "Compound indexes include multiple fields.",
+            "Multikey indexes index array elements.",
+            "Text indexes support text search queries."
+          ]
+        },
+        {
+          day: "Day 6: Aggregation",
+          link: "https://www.mongodb.com/docs/manual/aggregation/",
+          notes: [
+            "Aggregation operations process data records and return computed results.",
+            "Aggregation pipeline consists of stages.",
+            "$match filters documents.",
+            "$group groups documents by a specified expression.",
+            "$sort sorts documents.",
+            "$project reshapes documents."
+          ]
+        },
+        {
+          day: "Day 7: Replication & Sharding",
+          link: "https://www.mongodb.com/docs/manual/replication/",
+          notes: [
+            "Replication provides redundancy and increases data availability.",
+            "Replica sets are groups of mongod instances.",
+            "Primary member receives all write operations.",
+            "Secondary members replicate primary's data.",
+            "Sharding distributes data across multiple machines.",
+            "Shard keys determine how data is distributed."
+          ]
+        }
+      ],
+      oracle: [
+        {
+          day: "Day 1: Introduction to Oracle",
+          link: "https://docs.oracle.com/en/database/oracle/oracle-database/",
+          notes: [
+            "Oracle Database is a multi-model database.",
+            "It is the first database designed for enterprise grid computing.",
+            "Oracle Database supports SQL and PL/SQL.",
+            "It provides high performance, scalability, and security.",
+            "Oracle Database runs on various platforms.",
+            "It has a comprehensive set of management tools."
+          ]
+        },
+        {
+          day: "Day 2: SQL Basics",
+          link: "https://docs.oracle.com/en/database/oracle/oracle-database/",
+          notes: [
+            "SQL is the standard language for relational database access.",
+            "SELECT statement retrieves data from tables.",
+            "FROM clause specifies tables.",
+            "WHERE clause filters rows.",
+            "ORDER BY clause sorts results.",
+            "GROUP BY clause groups rows."
+          ]
+        },
+        {
+          day: "Day 3: PL/SQL Fundamentals",
+          link: "https://docs.oracle.com/en/database/oracle/oracle-database/",
+          notes: [
+            "PL/SQL is Oracle's procedural extension to SQL.",
+            "PL/SQL combines SQL with procedural features.",
+            "Blocks are the basic structure of PL/SQL code.",
+            "Variables store data values.",
+            "Conditional statements control flow.",
+            "Loops execute code repeatedly."
+          ]
+        },
+        {
+          day: "Day 4: Data Types",
+          link: "https://docs.oracle.com/en/database/oracle/oracle-database/",
+          notes: [
+            "Oracle Database has many built-in data types.",
+            "CHAR stores fixed-length character strings.",
+            "VARCHAR2 stores variable-length character strings.",
+            "NUMBER stores fixed-point or floating-point numbers.",
+            "DATE stores date and time values.",
+            "LOB stores large objects."
+          ]
+        },
+        {
+          day: "Day 5: Schema Objects",
+          link: "https://docs.oracle.com/en/database/oracle/oracle-database/",
+          notes: [
+            "Tables store data in rows and columns.",
+            "Views are virtual tables based on SELECT statements.",
+            "Indexes speed up data retrieval.",
+            "Sequences generate unique numbers.",
+            "Synonyms provide alternative names for objects.",
+            "Stored procedures contain PL/SQL code."
+          ]
+        },
+        {
+          day: "Day 6: Transactions",
+          link: "https://docs.oracle.com/en/database/oracle/oracle-database/",
+          notes: [
+            "Transactions are units of work.",
+            "COMMIT makes changes permanent.",
+            "ROLLBACK undoes changes.",
+            "SAVEPOINT marks a point in a transaction.",
+            "SET TRANSACTION sets transaction properties.",
+            "Locking controls concurrent access to data."
+          ]
+        },
+        {
+          day: "Day 7: Security",
+          link: "https://docs.oracle.com/en/database/oracle/oracle-database/",
+          notes: [
+            "Users are accounts that can access the database.",
+            "Roles are groups of privileges.",
+            "Privileges grant permissions to perform actions.",
+            "Profiles limit resource usage.",
+            "Auditing tracks database activities.",
+            "Encryption protects sensitive data."
+          ]
+        }
+      ],
+      redis: [
+        {
+          day: "Day 1: Introduction to Redis",
+          link: "https://redis.io/documentation",
+          notes: [
+            "Redis is an open source, in-memory data structure store.",
+            "It can be used as a database, cache, and message broker.",
+            "Redis supports various data structures.",
+            "It has built-in replication.",
+            "Redis provides high availability through Redis Sentinel.",
+            "It supports automatic partitioning with Redis Cluster."
+          ]
+        },
+        {
+          day: "Day 2: Data Types",
+          link: "https://redis.io/documentation",
+          notes: [
+            "Strings are the most basic Redis data type.",
+            "Lists are collections of strings sorted by insertion order.",
+            "Sets are unordered collections of unique strings.",
+            "Sorted Sets are sets with a score associated with each element.",
+            "Hashes are maps between string fields and string values.",
+            "Bitmaps are bit operations on strings."
+          ]
+        },
+        {
+          day: "Day 3: Commands",
+          link: "https://redis.io/commands",
+          notes: [
+            "SET sets a key to hold a string value.",
+            "GET returns the value of a key.",
+            "DEL deletes a key.",
+            "EXPIRE sets a timeout on a key.",
+            "TTL returns the remaining time to live of a key.",
+            "KEYS returns all keys matching a pattern."
+          ]
+        },
+        {
+          day: "Day 4: Persistence",
+          link: "https://redis.io/topics/persistence",
+          notes: [
+            "Redis provides different persistence options.",
+            "RDB creates snapshots of the dataset.",
+            "AOF logs every write operation.",
+            "RDB is compact and suitable for backups.",
+            "AOF is more durable but larger.",
+            "Both can be used together."
+          ]
+        },
+        {
+          day: "Day 5: Transactions",
+          link: "https://redis.io/topics/transactions",
+          notes: [
+            "Redis transactions allow executing a group of commands.",
+            "MULTI starts a transaction.",
+            "EXEC executes all commands in the transaction.",
+            "DISCARD discards the transaction.",
+            "WATCH monitors keys for changes.",
+            "UNWATCH unwatch all keys."
+          ]
+        },
+        {
+          day: "Day 6: Pub/Sub",
+          link: "https://redis.io/topics/pubsub",
+          notes: [
+            "Pub/Sub implements messaging systems.",
+            "PUBLISH sends a message to a channel.",
+            "SUBSCRIBE subscribes to channels.",
+            "UNSUBSCRIBE unsubscribes from channels.",
+            "PSUBSCRIBE subscribes to patterns.",
+            "PUNSUBSCRIBE unsubscribes from patterns."
+          ]
+        },
+        {
+          day: "Day 7: Security",
+          link: "https://redis.io/topics/security",
+          notes: [
+            "Redis can be secured with passwords.",
+            "AUTH command authenticates the connection.",
+            "ACLs provide fine-grained access control.",
+            "Redis can be configured to bind to specific interfaces.",
+            "SSL/TLS can be used for encrypted connections.",
+            "Redis should not be exposed to the internet."
+          ]
+        }
+      ],
+      firebase: [
+        {
+          day: "Day 1: Introduction to Firebase",
+          link: "https://firebase.google.com/",
+          notes: [
+            "Firebase is Google's mobile and web application development platform.",
+            "It helps developers build high-quality apps.",
+            "Firebase provides many tools and services.",
+            "It offers real-time database and authentication.",
+            "Firebase has cloud storage and hosting.",
+            "It provides analytics and crash reporting."
+          ]
+        },
+        {
+          day: "Day 2: Firebase Setup",
+          link: "https://firebase.google.com/docs/web/setup",
+          notes: [
+            "Create a Firebase project in the Firebase console.",
+            "Register your app with the Firebase project.",
+            "Add Firebase SDK to your app.",
+            "Initialize Firebase in your app.",
+            "Firebase configuration contains project settings.",
+            "Firebase services can be added as needed."
+          ]
+        },
+        {
+          day: "Day 3: Authentication",
+          link: "https://firebase.google.com/docs/auth",
+          notes: [
+            "Firebase Authentication provides backend services.",
+            "It supports email and password authentication.",
+            "It supports federated identity providers.",
+            "Anonymous authentication allows users without accounts.",
+            "Phone number authentication is supported.",
+            "Custom authentication systems can be integrated."
+          ]
+        },
+        {
+          day: "Day 4: Firestore",
+          link: "https://firebase.google.com/docs/firestore",
+          notes: [
+            "Cloud Firestore is a flexible, scalable database.",
+            "It stores data in documents and collections.",
+            "Documents contain fields mapped to values.",
+            "Collections contain documents.",
+            "Firestore supports real-time updates.",
+            "It has powerful querying capabilities."
+          ]
+        },
+        {
+          day: "Day 5: Realtime Database",
+          link: "https://firebase.google.com/docs/database",
+          notes: [
+            "Realtime Database is a NoSQL database.",
+            "Data is stored as JSON.",
+            "It synchronizes data in real-time.",
+            "All clients receive updates automatically.",
+            "Data is available even when offline.",
+            "It has powerful querying capabilities."
+          ]
+        },
+        {
+          day: "Day 6: Cloud Storage",
+          link: "https://firebase.google.com/docs/storage",
+          notes: [
+            "Cloud Storage stores user-generated content.",
+            "It stores files like images and videos.",
+            "Files are stored in Google Cloud Storage buckets.",
+            "Security rules control access to files.",
+            "Files can be uploaded and downloaded.",
+            "Metadata can be stored with files."
+          ]
+        },
+        {
+          day: "Day 7: Firebase Hosting",
+          link: "https://firebase.google.com/docs/hosting",
+          notes: [
+            "Firebase Hosting provides fast and secure hosting.",
+            "It serves web content over a global CDN.",
+            "SSL is provided by default.",
+            "Custom domains can be connected.",
+            "One-click rollbacks are available.",
+            "It can be integrated with Cloud Functions."
+          ]
+        }
+      ],
+      cassandra: [
+        {
+          day: "Day 1: Introduction to Cassandra",
+          link: "https://cassandra.apache.org/_/index.html",
+          notes: [
+            "Apache Cassandra is a free and open-source distributed database.",
+            "It is designed to handle large amounts of data across many servers.",
+            "Cassandra provides high availability with no single point of failure.",
+            "It is a NoSQL database.",
+            "Cassandra offers linear scalability.",
+            "It has a masterless architecture."
+          ]
+        },
+        {
+          day: "Day 2: Data Model",
+          link: "https://cassandra.apache.org/_/index.html",
+          notes: [
+            "Cassandra's data model is based on Google's Bigtable.",
+            "Data is organized in keyspaces.",
+            "Keyspaces contain tables.",
+            "Tables contain rows.",
+            "Rows contain columns.",
+            "Columns have names and values."
+          ]
+        },
+        {
+          day: "Day 3: CQL",
+          link: "https://cassandra.apache.org/_/cql3/CQL.html",
+          notes: [
+            "CQL is Cassandra Query Language.",
+            "It is similar to SQL.",
+            "CREATE KEYSPACE creates a keyspace.",
+            "CREATE TABLE creates a table.",
+            "INSERT adds data to a table.",
+            "SELECT retrieves data from a table."
+          ]
+        },
+        {
+          day: "Day 4: Architecture",
+          link: "https://cassandra.apache.org/_/index.html",
+          notes: [
+            "Cassandra has a peer-to-peer architecture.",
+            "Nodes are organized in a ring.",
+            "Data is partitioned across nodes.",
+            "Replication ensures data redundancy.",
+            "Consistency levels control how many nodes must respond.",
+            "Gossip protocol is used for node communication."
+          ]
+        },
+        {
+          day: "Day 5: Data Partitioning",
+          link: "https://cassandra.apache.org/_/index.html",
+          notes: [
+            "Partitioning distributes data across nodes.",
+            "Partition key determines data placement.",
+            "Composite partition keys use multiple columns.",
+            "Clustering keys sort data within a partition.",
+            "Token ranges determine node responsibility.",
+            "Virtual nodes improve load distribution."
+          ]
+        },
+        {
+          day: "Day 6: Secondary Indexes",
+          link: "https://cassandra.apache.org/_/index.html",
+          notes: [
+            "Secondary indexes allow querying by non-primary key columns.",
+            "Local indexes are efficient for single-partition queries.",
+            "Global indexes support multi-partition queries.",
+            "Indexing has performance implications.",
+            "SASI provides advanced indexing capabilities.",
+            "Materialized views create precomputed views."
+          ]
+        },
+        {
+          day: "Day 7: Security",
+          link: "https://cassandra.apache.org/_/index.html",
+          notes: [
+            "Cassandra has robust security features.",
+            "Authentication verifies user identity.",
+            "Authorization controls access to data.",
+            "Encryption protects data in transit.",
+            "Transparent Data Encryption protects data at rest.",
+            "Audit logging tracks database activities."
+          ]
+        }
+      ]
+    };
+
+    // DevOps Data - Updated with notes
+    const devopsContent = [
+      {
+        day: "Day 1: Introduction to DevOps & CI/CD",
+        link: "https://www.jenkins.io/doc/",
+        notes: [
+          "DevOps combines software development and IT operations.",
+          "CI/CD automates the integration and delivery of code.",
+          "Continuous Integration involves automatically building and testing code.",
+          "Continuous Delivery automates the release of validated code.",
+          "Jenkins is a popular open-source CI/CD tool.",
+          "CI/CD pipelines automate the build, test, and deployment process."
+        ]
+      },
+      {
+        day: "Day 2: Version Control with Git & GitHub",
+        link: "https://git-scm.com/doc",
+        notes: [
+          "Git is a distributed version control system.",
+          "GitHub is a web-based hosting service for Git repositories.",
+          "Git allows multiple developers to work on the same project.",
+          "Branching enables parallel development.",
+          "Pull requests facilitate code review and collaboration.",
+          "Git workflows define how code changes are managed."
+        ]
+      },
+      {
+        day: "Day 3: Infrastructure as Code",
+        link: "https://www.terraform.io/docs",
+        notes: [
+          "Infrastructure as Code (IaC) manages infrastructure through code.",
+          "Terraform is a popular IaC tool.",
+          "IaC enables versioning of infrastructure.",
+          "It allows for automated provisioning and management.",
+          "IaC improves consistency and reduces errors.",
+          "It enables infrastructure to be treated as software."
+        ]
+      },
+      {
+        day: "Day 4: Containerization with Docker",
+        link: "https://docs.docker.com/",
+        notes: [
+          "Docker is a platform for developing, shipping, and running applications in containers.",
+          "Containers package code and dependencies together.",
+          "Docker images are read-only templates used to create containers.",
+          "Dockerfiles define how to build Docker images.",
+          "Docker Compose defines and runs multi-container applications.",
+          "Container registries store and distribute Docker images."
+        ]
+      },
+      {
+        day: "Day 5: Orchestration with Kubernetes",
+        link: "https://kubernetes.io/docs/",
+        notes: [
+          "Kubernetes is an open-source container orchestration platform.",
+          "It automates deployment, scaling, and management of containerized applications.",
+          "Pods are the smallest deployable units in Kubernetes.",
+          "Services expose applications running on pods.",
+          "Deployments manage the lifecycle of pods.",
+          "Kubernetes provides self-healing capabilities."
+        ]
+      },
+      {
+        day: "Day 6: Monitoring & Logging",
+        link: "https://prometheus.io/docs",
+        notes: [
+          "Monitoring tracks the health and performance of systems.",
+          "Logging records events that happen in the system.",
+          "Prometheus is an open-source monitoring system.",
+          "Grafana visualizes metrics from Prometheus.",
+          "ELK stack (Elasticsearch, Logstash, Kibana) is used for logging.",
+          "Monitoring and logging are essential for troubleshooting."
+        ]
+      },
+      {
+        day: "Day 7: Security in DevOps",
+        link: "https://owasp.org/www-project-devsecops-guide/",
+        notes: [
+          "DevSecOps integrates security into DevOps practices.",
+          "Security should be considered at every stage.",
+          "Static Application Security Testing (SAST) analyzes source code.",
+          "Dynamic Application Security Testing (DAST) tests running applications.",
+          "Infrastructure scanning identifies vulnerabilities in infrastructure.",
+          "Compliance as Code ensures systems meet regulatory requirements."
+        ]
+      }
+    ];
+
+    // Data Storage
+    let internships = [];
+    let internshipCounter = 1;
+    let jobs = [];
+    let jobCounter = 1;
+    let posters = [];
+    let posterCounter = 1;
+    let tasks = [];
+    let taskCounter = 1;
+    let events = [];
+    let eventCounter = 1;
+    let hackathons = [];
+    let hackathonCounter = 1;
+    let assignments = [];
+    let assignmentCounter = 1;
+    let certificates = [];
+    let certCounter = 1;
+    let writtenAssignments = [];
+    let writtenAssignmentCounter = 1;
+
+    function loadSection(section) {
+      const content = document.getElementById('admin-content');
+      content.innerHTML = '';
+      if (section === 'courses') {
+        content.innerHTML = `
+          <h2>Courses Management</h2>
+          <div class="sub-option" onclick="loadFrontend()">
+            <i class="fas fa-laptop-code"></i> Frontend
+          </div>
+          <div class="sub-option" onclick="loadBackend()">
+            <i class="fas fa-server"></i> Backend
+          </div>
+          <div class="sub-option" onclick="loadDatabase()">
+            <i class="fas fa-database"></i> Database
+          </div>
+          <div class="sub-option" onclick="loadDevOps()">
+            <i class="fas fa-tools"></i> DevOps
+          </div>
+          <div id="course-detail" class="detail-section"></div>
+        `;
+      } else if (section === 'certificates') {
+        content.innerHTML = `
+          <h2>Certificates Management</h2>
+          <div class="option-box">
+            <h3>Add Certificate</h3>
+            <input type="text" id="certName" placeholder="Certificate Name">
+            <input type="text" id="certRecipient" placeholder="Recipient Name">
+            <button onclick="addCertificate()">Add Certificate</button>
+          </div>
+          <div id="certificateList"></div>
+        `;
+        renderCertificates();
+      } else if (section === 'hackathons') {
+        content.innerHTML = `
+          <h2>Hackathons Management</h2>
+          <div class="sub-option" onclick="loadHackathon('participated')"><i class="fas fa-lightbulb"></i> Participated</div>
+          <div class="sub-option" onclick="loadHackathon('not-participated')"><i class="fas fa-lightbulb"></i> Not Participated</div>
+          <div class="sub-option" onclick="loadHackathon('ongoing')"><i class="fas fa-lightbulb"></i> Ongoing</div>
+          <div id="hackathon-detail" class="detail-section"></div>
+        `;
+      } else if (section === 'internships') {
+        content.innerHTML = `
+          <h2>Internships Management</h2>
+          <div class="option-box">
+            <h3>Upload Internship</h3>
+            <input type="text" id="companyName" placeholder="Company Name">
+            <input type="text" id="internshipTitle" placeholder="Internship Title">
+            <input type="number" id="positions" placeholder="Number of Positions">
+            <input type="text" id="area" placeholder="Domain / Area">
+            <input type="text" id="skills" placeholder="Skills Required">
+            <textarea id="description" placeholder="Internship Description"></textarea>
+            <textarea id="notes" placeholder="Additional Notes"></textarea>
+            <input type="file" id="internshipImage" accept="image/*" onchange="previewInternshipImage(event)">
+            <img id="internshipPreview" src="" alt="Image Preview" style="width:100%; margin-top:10px; display:none;">
+            <button onclick="uploadInternship()">Upload Internship</button>
+          </div>
+          <div id="internshipList"></div>
+        `;
+        renderInternships();
+      } else if (section === 'jobs') {
+        content.innerHTML = `
+          <h2>Jobs Management</h2>
+          <div class="option-box">
+            <h3>Upload Job</h3>
+            <input type="text" id="companyName" placeholder="Company Name">
+            <input type="text" id="jobTitle" placeholder="Job Title">
+            <input type="number" id="positions" placeholder="Number of Positions">
+            <input type="text" id="area" placeholder="Domain / Area">
+            <input type="text" id="skills" placeholder="Skills Required">
+            <textarea id="description" placeholder="Job Description"></textarea>
+            <textarea id="notes" placeholder="Additional Notes"></textarea>
+            <input type="file" id="jobImage" accept="image/*" onchange="previewJobImage(event)">
+            <img id="jobPreview" src="" alt="Image Preview" style="width:100%; margin-top:10px; display:none;">
+            <button onclick="uploadJob()">Upload Job</button>
+          </div>
+          <div class="option-box">
+            <h3>Create Job Poster</h3>
+            <input type="text" id="posterCompany" placeholder="Company Name">
+            <input type="text" id="posterTitle" placeholder="Job Title">
+            <input type="number" id="posterPositions" placeholder="Number of Positions">
+            <select id="posterType">
+              <option value="Full-Time">Full-Time</option>
+              <option value="Part-Time">Part-Time</option>
+              <option value="Internship">Internship</option>
+            </select>
+            <input type="text" id="posterLocation" placeholder="Location">
+            <input type="text" id="posterSkills" placeholder="Skills Required">
+            <textarea id="posterBenefits" placeholder="Key Benefits / Perks"></textarea>
+            <textarea id="posterDescription" placeholder="Job Description"></textarea>
+            <textarea id="posterNotes" placeholder="Additional Notes"></textarea>
+            <input type="file" id="posterImage" accept="image/*" onchange="previewPosterImage(event)">
+            <img id="posterPreview" src="" alt="Poster Preview" style="width:100%; margin-top:10px; display:none;">
+            <button onclick="createPoster()">Create Poster</button>
+          </div>
+          <div id="jobList"></div>
+          <div id="posterList"></div>
+        `;
+        renderJobs();
+        renderPosters();
+      } else if (section === 'assignments') {
+        content.innerHTML = `
+          <h2>Assignments Management</h2>
+          <div class="option-box">
+            <h3>Upload User Assignment</h3>
+            <input type="text" id="assignmentTitle" placeholder="Assignment Title">
+            <textarea id="assignmentDesc" placeholder="Assignment Description"></textarea>
+            <input type="date" id="assignmentDue" placeholder="Due Date">
+            <button onclick="createAssignment()">Upload Assignment</button>
+          </div>
+          <div class="option-box">
+            <h3>Create Head Assignment (Certificate)</h3>
+            <input type="text" id="headAssignmentTitle" placeholder="Assignment Title">
+            <textarea id="headAssignmentDesc" placeholder="Assignment Description"></textarea>
+            <input type="date" id="headAssignmentDue" placeholder="Due Date">
+            <input type="text" id="assignmentUser" placeholder="User Name">
+            <input type="password" id="headPassword" placeholder="Head Password">
+            <button onclick="createHeadAssignment()">Create Head Assignment</button>
+          </div>
+          <div id="assignmentList"></div>
+        `;
+        renderAssignments();
+      } else if (section === 'teamwork') {
+        content.innerHTML = `
+          <h2>Team Work Management</h2>
+          <div class="option-box">
+            <h3>Assign Work to Team Member</h3>
+            <input type="text" id="assignerName" placeholder="Your Name">
+            <input type="text" id="taskTitle" placeholder="Task Title">
+            <textarea id="taskDesc" placeholder="Task Description"></textarea>
+            <input type="date" id="dueDate" placeholder="Due Date">
+            <input type="text" id="assignedTo" placeholder="Assign to (Member Name)">
+            <input type="file" id="taskAttachment" accept="*/*" onchange="previewTaskAttachment(event)">
+            <img id="attachmentPreview" src="" alt="Attachment Preview" style="width:100%; margin-top:10px; display:none;">
+            <button onclick="assignWork()">Assign Work</button>
+          </div>
+          <div id="taskList"></div>
+        `;
+        renderTasks();
+      } else if (section === 'events') {
+        content.innerHTML = `
+          <h2>Events Management</h2>
+          <div class="option-box">
+            <h3>Upload Event</h3>
+            <input type="text" id="uploaderName" placeholder="Your Name">
+            <input type="text" id="eventTitle" placeholder="Event Title">
+            <input type="date" id="eventDate">
+            <textarea id="eventDescription" placeholder="Event Description"></textarea>
+            <input type="file" id="eventImage" accept="image/*" onchange="previewEventImage(event)">
+            <img id="eventPreview" src="" alt="Image Preview" style="width:100%; margin-top:10px; display:none;">
+            <button onclick="uploadEvent()">Upload Event</button>
+          </div>
+          <div id="eventList"></div>
+        `;
+        renderEvents();
+      } else if (section === 'write-assignments') {
+        content.innerHTML = `
+          <h2>Write Assignments</h2>
+          <div class="option-box" id="assignmentForm">
+            <h3>Submit Assignment</h3>
+            <select id="selectAssignment" onchange="loadAssignmentDetails()">
+              <option value="">Select an Assignment</option>
+              ${assignments.map(a => `<option value="${a.id}">${a.type} Assignment ${a.id}: ${a.title}</option>`).join('')}
+            </select>
+            <div id="assignmentDetails"></div>
+            <textarea id="writeAssignmentAnswer" placeholder="Write your answer here..."></textarea>
+            <input type="text" id="writeAssignmentTitle" placeholder="Assignment Title (for new assignments)">
+            <textarea id="writeAssignmentDesc" placeholder="Assignment Description (for new assignments)"></textarea>
+            <input type="date" id="writeAssignmentDue" placeholder="Due Date (for new assignments)">
+            <input type="text" id="writeAssignmentUser" placeholder="User Name (for Head Assignment)">
+            <select id="assignmentType">
+              <option value="User">User Assignment</option>
+              <option value="Head">Head Assignment</option>
+            </select>
+            <button onclick="submitWrittenAssignment()">Submit Assignment</button>
+          </div>
+          <div id="writtenAssignmentList"></div>
+        `;
+        renderWrittenAssignments();
+      } else if (section === 'verify-assignments') {
+        content.innerHTML = `
+          <h2>Verify Assignments</h2>
+          <div id="verifyAssignmentList"></div>
+        `;
+        renderVerifyAssignments();
+      } else if (section === 'profile') {
+        if (!currentUser) {
+          content.innerHTML = `
+            <div class="profile-container">
+              <div class="account-status">
+                <h4><i class="fas fa-exclamation-triangle"></i> Account Status</h4>
+                <p><span class="status-indicator" style="background: #ef4444;"></span> Not logged in</p>
+                <p>Please <a href="#" onclick="showPage('login')" style="color: var(--accent);">login</a> to view your profile.</p>
+              </div>
+              <div class="action-buttons">
+                <button onclick="showPage('login')"><i class="fas fa-sign-in-alt"></i> Login</button>
+                <button onclick="showPage('login'); document.getElementById('signupTab').click();"><i class="fas fa-user-plus"></i> Sign Up</button>
+              </div>
+            </div>
+          `;
+        } else {
+          content.innerHTML = `
+            <div class="profile-container">
+              <div class="account-status">
+                <h4><i class="fas fa-user-check"></i> Account Status</h4>
+                <p><span class="status-indicator"></span> Logged in as <strong>${currentUser.fullName}</strong></p>
+                <p><i class="fas fa-envelope"></i> ${currentUser.email}</p>
+              </div>
+              
+              <div class="verification-section">
+                <h4><i class="fas fa-shield-alt"></i> Account Verification</h4>
+                <p><span class="status-indicator ${currentUser.verified ? 'verified' : ''}"></span> 
+                  Account ${currentUser.verified ? 'Verified' : 'Not Verified'}</p>
+                ${!currentUser.verified ? '<p>Verify your account to access all features.</p>' : ''}
+                ${!currentUser.verified ? '<button onclick="sendVerificationEmail()"><i class="fas fa-paper-plane"></i> Send Verification Email</button>' : ''}
+              </div>
+              
+              <div class="profile-header">
+                <div class="profile-avatar">${currentUser.initials}</div>
+                <div class="profile-info">
+                  <h2>${currentUser.fullName}</h2>
+                  <p><i class="fas fa-envelope"></i> ${currentUser.email}</p>
+                  <p><i class="fas fa-phone"></i> ${currentUser.phone || '+1 (555) 123-4567'}</p>
+                  <p><i class="fas fa-map-marker-alt"></i> ${currentUser.location || 'San Francisco, CA'}</p>
+                </div>
+              </div>
+              
+              <div class="profile-section">
+                <h3><i class="fas fa-user-circle"></i> Personal Information</h3>
+                <div class="profile-details" id="personalInfo">
+                  <div class="profile-item">
+                    <h4>Full Name</h4>
+                    <p id="profileFullName">${currentUser.fullName}</p>
+                    <input type="text" id="editFullName" value="${currentUser.fullName}" class="hidden">
+                  </div>
+                  <div class="profile-item">
+                    <h4>Email</h4>
+                    <p id="profileEmail">${currentUser.email}</p>
+                    <input type="email" id="editEmail" value="${currentUser.email}" class="hidden">
+                  </div>
+                  <div class="profile-item">
+                    <h4>Phone</h4>
+                    <p id="profilePhone">${currentUser.phone || '+1 (555) 123-4567'}</p>
+                    <input type="text" id="editPhone" value="${currentUser.phone || '+1 (555) 123-4567'}" class="hidden">
+                  </div>
+                  <div class="profile-item">
+                    <h4>Location</h4>
+                    <p id="profileLocation">${currentUser.location || 'San Francisco, CA'}</p>
+                    <input type="text" id="editLocation" value="${currentUser.location || 'San Francisco, CA'}" class="hidden">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="profile-section">
+                <h3><i class="fas fa-briefcase"></i> Professional Information</h3>
+                <div class="profile-details" id="professionalInfo">
+                  <div class="profile-item">
+                    <h4>Position</h4>
+                    <p id="profilePosition">${currentUser.position || 'Senior Developer'}</p>
+                    <input type="text" id="editPosition" value="${currentUser.position || 'Senior Developer'}" class="hidden">
+                  </div>
+                  <div class="profile-item">
+                    <h4>Department</h4>
+                    <p id="profileDepartment">${currentUser.department || 'Engineering'}</p>
+                    <input type="text" id="editDepartment" value="${currentUser.department || 'Engineering'}" class="hidden">
+                  </div>
+                  <div class="profile-item">
+                    <h4>Experience</h4>
+                    <p id="profileExperience">${currentUser.experience || '5+ years'}</p>
+                    <input type="text" id="editExperience" value="${currentUser.experience || '5+ years'}" class="hidden">
+                  </div>
+                  <div class="profile-item">
+                    <h4>Skills</h4>
+                    <p id="profileSkills">${currentUser.skills || 'JavaScript, React, Node.js, Python'}</p>
+                    <input type="text" id="editSkills" value="${currentUser.skills || 'JavaScript, React, Node.js, Python'}" class="hidden">
+                  </div>
+                </div>
+              </div>
+              
+              <div class="profile-section">
+                <h3><i class="fas fa-chart-line"></i> Activity Statistics</h3>
+                <div class="profile-details">
+                  <div class="profile-item">
+                    <h4>Courses Completed</h4>
+                    <p>12</p>
+                  </div>
+                  <div class="profile-item">
+                    <h4>Certificates Earned</h4>
+                    <p>${certificates.length}</p>
+                  </div>
+                  <div class="profile-item">
+                    <h4>Assignments Submitted</h4>
+                    <p>${assignments.length + writtenAssignments.length}</p>
+                  </div>
+                  <div class="profile-item">
+                    <h4>Events Attended</h4>
+                    <p>${events.length}</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="action-buttons">
+                <button id="editProfileBtn" onclick="toggleEditMode()"><i class="fas fa-edit"></i> Edit Profile</button>
+                <button id="saveProfileBtn" class="hidden" onclick="saveProfile()"><i class="fas fa-save"></i> Save Changes</button>
+                <button id="cancelEditBtn" class="hidden" onclick="cancelEdit()"><i class="fas fa-times"></i> Cancel</button>
+                <button onclick="changePassword()"><i class="fas fa-key"></i> Change Password</button>
+              </div>
+            </div>
+          `;
+        }
+      } else if (section === 'settings') {
+        content.innerHTML = `
+          <div class="settings-container">
+            <div class="settings-section">
+              <h3><i class="fas fa-palette"></i> Appearance</h3>
+              <div class="settings-options">
+                <div class="setting-option">
+                  <label><i class="fas fa-moon"></i> Dark Mode</label>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="darkModeToggle" ${userSettings.darkMode ? 'checked' : ''} onchange="updateSetting('darkMode', this.checked)">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-option">
+                  <label><i class="fas fa-text-height"></i> Font Size</label>
+                  <select id="fontSizeSelect" onchange="updateSetting('fontSize', this.value)">
+                    <option value="Small" ${userSettings.fontSize === 'Small' ? 'selected' : ''}>Small</option>
+                    <option value="Medium" ${userSettings.fontSize === 'Medium' ? 'selected' : ''}>Medium</option>
+                    <option value="Large" ${userSettings.fontSize === 'Large' ? 'selected' : ''}>Large</option>
+                  </select>
+                </div>
+                <div class="setting-option">
+                  <label><i class="fas fa-language"></i> Language</label>
+                  <select id="languageSelect" onchange="updateSetting('language', this.value)">
+                    <option value="English" ${userSettings.language === 'English' ? 'selected' : ''}>English</option>
+                    <option value="Spanish" ${userSettings.language === 'Spanish' ? 'selected' : ''}>Spanish</option>
+                    <option value="French" ${userSettings.language === 'French' ? 'selected' : ''}>French</option>
+                    <option value="German" ${userSettings.language === 'German' ? 'selected' : ''}>German</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <div class="settings-section">
+              <h3><i class="fas fa-bell"></i> Notifications</h3>
+              <div class="settings-options">
+                <div class="setting-option">
+                  <label><i class="fas fa-envelope"></i> Email Notifications</label>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="emailNotificationsToggle" ${userSettings.emailNotifications ? 'checked' : ''} onchange="updateSetting('emailNotifications', this.checked)">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-option">
+                  <label><i class="fas fa-mobile-alt"></i> Push Notifications</label>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="pushNotificationsToggle" ${userSettings.pushNotifications ? 'checked' : ''} onchange="updateSetting('pushNotifications', this.checked)">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-option">
+                  <label><i class="fas fa-comment"></i> Assignment Reminders</label>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="assignmentRemindersToggle" ${userSettings.assignmentReminders ? 'checked' : ''} onchange="updateSetting('assignmentReminders', this.checked)">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-option">
+                  <label><i class="fas fa-calendar-check"></i> Event Reminders</label>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="eventRemindersToggle" ${userSettings.eventReminders ? 'checked' : ''} onchange="updateSetting('eventReminders', this.checked)">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+              </div>
+            </div>
+            
+            <div class="settings-section">
+              <h3><i class="fas fa-shield-alt"></i> Privacy & Security</h3>
+              <div class="settings-options">
+                <div class="setting-option">
+                  <label><i class="fas fa-lock"></i> Two-Factor Authentication</label>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="twoFactorAuthToggle" ${userSettings.twoFactorAuth ? 'checked' : ''} onchange="updateSetting('twoFactorAuth', this.checked)">
+                    <span class="slider"></span>
+                  </label>
+                </div>
+                <div class="setting-option">
+                  <label><i class="fas fa-history"></i> Login History</label>
+                  <button onclick="viewLoginHistory()"><i class="fas fa-eye"></i> View</button>
+                </div>
+                <div class="setting-option">
+                  <label><i class="fas fa-user-shield"></i> Privacy Settings</label>
+                  <button onclick="configurePrivacy()"><i class="fas fa-cog"></i> Configure</button>
+                </div>
+                <div class="setting-option">
+                  <label><i class="fas fa-download"></i> Download My Data</label>
+                  <button onclick="downloadData()"><i class="fas fa-download"></i> Download</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="settings-section">
+              <h3><i class="fas fa-database"></i> Data Management</h3>
+              <div class="settings-options">
+                <div class="setting-option">
+                  <label><i class="fas fa-sync-alt"></i> Sync Data</label>
+                  <button onclick="syncData()"><i class="fas fa-sync"></i> Sync Now</button>
+                </div>
+                <div class="setting-option">
+                  <label><i class="fas fa-trash-alt"></i> Clear Cache</label>
+                  <button onclick="clearCache()"><i class="fas fa-trash"></i> Clear</button>
+                </div>
+                <div class="setting-option">
+                  <label><i class="fas fa-file-export"></i> Export Data</label>
+                  <button onclick="exportData()"><i class="fas fa-file-export"></i> Export</button>
+                </div>
+                <div class="setting-option">
+                  <label><i class="fas fa-file-import"></i> Import Data</label>
+                  <button onclick="importData()"><i class="fas fa-file-import"></i> Import</button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="action-buttons">
+              <button onclick="saveSettings()"><i class="fas fa-save"></i> Save Settings</button>
+              <button onclick="resetSettings()"><i class="fas fa-undo"></i> Reset to Default</button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    // Profile editing functions
+    let isEditMode = false;
+
+    function toggleEditMode() {
+      isEditMode = !isEditMode;
+      
+      const displayElements = document.querySelectorAll('#personalInfo p, #professionalInfo p');
+      const inputElements = document.querySelectorAll('#personalInfo input, #professionalInfo input');
+      const editBtn = document.getElementById('editProfileBtn');
+      const saveBtn = document.getElementById('saveProfileBtn');
+      const cancelBtn = document.getElementById('cancelEditBtn');
+      
+      if (isEditMode) {
+        displayElements.forEach(el => el.classList.add('hidden'));
+        inputElements.forEach(el => el.classList.remove('hidden'));
+        editBtn.classList.add('hidden');
+        saveBtn.classList.remove('hidden');
+        cancelBtn.classList.remove('hidden');
+      } else {
+        displayElements.forEach(el => el.classList.remove('hidden'));
+        inputElements.forEach(el => el.classList.add('hidden'));
+        editBtn.classList.remove('hidden');
+        saveBtn.classList.add('hidden');
+        cancelBtn.classList.add('hidden');
+      }
+    }
+
+    function saveProfile() {
+      // Update current user data
+      currentUser.fullName = document.getElementById('editFullName').value;
+      currentUser.email = document.getElementById('editEmail').value;
+      currentUser.phone = document.getElementById('editPhone').value;
+      currentUser.location = document.getElementById('editLocation').value;
+      currentUser.position = document.getElementById('editPosition').value;
+      currentUser.department = document.getElementById('editDepartment').value;
+      currentUser.experience = document.getElementById('editExperience').value;
+      currentUser.skills = document.getElementById('editSkills').value;
+      currentUser.initials = currentUser.fullName.split(' ').map(n => n[0]).join('').toUpperCase();
+      
+      // Update in localStorage
+      updateUserAccount(currentUser);
+      
+      // Update display elements
+      document.getElementById('profileFullName').textContent = currentUser.fullName;
+      document.getElementById('profileEmail').textContent = currentUser.email;
+      document.getElementById('profilePhone').textContent = currentUser.phone;
+      document.getElementById('profileLocation').textContent = currentUser.location;
+      document.getElementById('profilePosition').textContent = currentUser.position;
+      document.getElementById('profileDepartment').textContent = currentUser.department;
+      document.getElementById('profileExperience').textContent = currentUser.experience;
+      document.getElementById('profileSkills').textContent = currentUser.skills;
+      
+      // Update profile header
+      document.querySelector('.profile-info h2').textContent = currentUser.fullName;
+      document.querySelector('.profile-info p:first-of-type').innerHTML = `<i class="fas fa-envelope"></i> ${currentUser.email}`;
+      document.querySelector('.profile-info p:nth-of-type(2)').innerHTML = `<i class="fas fa-phone"></i> ${currentUser.phone}`;
+      document.querySelector('.profile-info p:nth-of-type(3)').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${currentUser.location}`;
+      document.querySelector('.profile-avatar').textContent = currentUser.initials;
+      
+      // Send updated user details to admin email
+      sendUserDetailsToAdmin(currentUser);
+      
+      // Exit edit mode
+      toggleEditMode();
+      showNotification('Profile updated successfully!');
+    }
+
+    function cancelEdit() {
+      // Reset input values
+      document.getElementById('editFullName').value = currentUser.fullName;
+      document.getElementById('editEmail').value = currentUser.email;
+      document.getElementById('editPhone').value = currentUser.phone;
+      document.getElementById('editLocation').value = currentUser.location;
+      document.getElementById('editPosition').value = currentUser.position;
+      document.getElementById('editDepartment').value = currentUser.department;
+      document.getElementById('editExperience').value = currentUser.experience;
+      document.getElementById('editSkills').value = currentUser.skills;
+      
+      // Exit edit mode
+      toggleEditMode();
+    }
+
+    function changePassword() {
+      const currentPassword = prompt('Enter your current password:');
+      if (!currentPassword) return;
+      
+      if (currentPassword !== currentUser.password) {
+        showNotification('Incorrect current password!');
+        return;
+      }
+      
+      const newPassword = prompt('Enter your new password:');
+      if (!newPassword) return;
+      
+      const confirmPassword = prompt('Confirm your new password:');
+      if (newPassword !== confirmPassword) {
+        showNotification('Passwords do not match!');
+        return;
+      }
+      
+      // Update password
+      currentUser.password = newPassword;
+      updateUserAccount(currentUser);
+      
+      // Send password change notification to admin
+      sendUserDetailsToAdmin(currentUser);
+      
+      showNotification('Password changed successfully!');
+    }
+
+    function sendVerificationEmail() {
+      if (!currentUser) {
+        showNotification('Please login first!');
+        return;
+      }
+      
+      // Send verification email to user
+      sendVerificationEmailToUser(currentUser);
+      
+      // In a real app, this would trigger an actual email
+      // For demo purposes, we'll mark the account as verified after a short delay
+      setTimeout(() => {
+        currentUser.verified = true;
+        updateUserAccount(currentUser);
+        
+        // Send verification status update to admin
+        sendUserDetailsToAdmin(currentUser);
+        
+        showNotification('Account verified successfully!');
+        loadSection('profile'); // Refresh profile page
+      }, 3000);
+    }
+
+    // Settings functions
+    function updateSetting(setting, value) {
+      userSettings[setting] = value;
+      showNotification(`${setting} updated to ${value}`);
+    }
+
+    function saveSettings() {
+      // In a real app, this would save to a backend
+      showNotification('Settings saved successfully!');
+    }
+
+    function resetSettings() {
+      if (confirm('Are you sure you want to reset all settings to default?')) {
+        userSettings = {
+          darkMode: true,
+          fontSize: 'Medium',
+          language: 'English',
+          emailNotifications: true,
+          pushNotifications: false,
+          assignmentReminders: true,
+          eventReminders: true,
+          twoFactorAuth: false
+        };
+        
+        // Reload settings page to reflect changes
+        loadSection('settings');
+        showNotification('Settings reset to default!');
+      }
+    }
+
+    function viewLoginHistory() {
+      showNotification('Login history feature coming soon!');
+    }
+
+    function configurePrivacy() {
+      showNotification('Privacy settings configuration coming soon!');
+    }
+
+    function downloadData() {
+      showNotification('Data download started! Check your downloads folder.');
+    }
+
+    function syncData() {
+      showNotification('Data sync completed successfully!');
+    }
+
+    function clearCache() {
+      if (confirm('Are you sure you want to clear all cached data?')) {
+        showNotification('Cache cleared successfully!');
+      }
+    }
+
+    function exportData() {
+      showNotification('Data export started! Check your downloads folder.');
+    }
+
+    function importData() {
+      showNotification('Data import feature coming soon!');
+    }
+
+    function promptVerifyAssignments() {
+      const password = prompt('Enter password to access Verify Assignments:');
+      if (password === '7780441516vishnu') {
+        loadSection('verify-assignments');
+      } else {
+        showNotification('Invalid password! Access denied.');
+      }
+    }
+
+    function loadFrontend() {
+      const content = document.getElementById('course-detail');
+      content.style.display = 'block';
+      content.innerHTML = `
+        <div class="back-btn" onclick="clearDetails()">← Back to Courses</div>
+        <h3>Frontend Courses Management</h3>
+        <div class="course-grid">
+          <div class="course-card" onclick="showFrontendDetail('react')"><i class="fab fa-react"></i><span>React.js</span></div>
+          <div class="course-card" onclick="showFrontendDetail('vue')"><i class="fab fa-vuejs"></i><span>Vue.js</span></div>
+          <div class="course-card" onclick="showFrontendDetail('svelte')"><i class="fas fa-rocket"></i><span>Svelte</span></div>
+          <div class="course-card" onclick="showFrontendDetail('angular')"><i class="fas fa-cube"></i><span>Angular</span></div>
+          <div class="course-card" onclick="showFrontendDetail('git')"><i class="fas fa-code-branch"></i><span>Git & GitHub</span></div>
+          <div class="course-card" onclick="showFrontendDetail('typescript')"><i class="fas fa-code"></i><span>TypeScript</span></div>
+          <div class="course-card" onclick="showFrontendDetail('buildtools')"><i class="fas fa-cogs"></i><span>Build Tools</span></div>
+        </div>
+        <div id="frontend-detail" class="detail-section"></div>
+      `;
+    }
+
+    function showFrontendDetail(topic) {
+      const detail = document.getElementById('frontend-detail');
+      detail.style.display = 'block';
+      
+      let html = `<h4>${topic.toUpperCase()} 7-Day Learning Plan</h4>`;
+      
+      frontendCourses[topic].forEach(day => {
+        html += `
+          <div class="day-item" onclick="toggleNotes(this)">
+            <strong>${day.day}</strong><br>
+            <a href="${day.link}" target="_blank">Learn more</a>
+            <div class="notes-content">
+              <ul>
+                ${day.notes.map(note => `<li>${note}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        `;
+      });
+      
+      detail.innerHTML = html;
+    }
+
+    function loadBackend() {
+      const content = document.getElementById('course-detail');
+      content.style.display = 'block';
+      content.innerHTML = `
+        <div class="back-btn" onclick="clearDetails()">← Back to Courses</div>
+        <h3>Backend Courses Management</h3>
+        <div class="course-grid">
+          <div class="course-card" onclick="showBackendDetail('nodejs')"><i class="fab fa-node-js"></i><span>Node.js</span></div>
+          <div class="course-card" onclick="showBackendDetail('python')"><i class="fab fa-python"></i><span>Python</span></div>
+          <div class="course-card" onclick="showBackendDetail('java')"><i class="fab fa-java"></i><span>Java</span></div>
+          <div class="course-card" onclick="showBackendDetail('php')"><i class="fab fa-php"></i><span>PHP</span></div>
+          <div class="course-card" onclick="showBackendDetail('go')"><i class="fas fa-code"></i><span>Go</span></div>
+        </div>
+        <div id="backend-detail" class="detail-section"></div>
+      `;
+    }
+
+    function showBackendDetail(id) {
+      const detail = document.getElementById('backend-detail');
+      detail.style.display = 'block';
+      
+      let html = `<h4>${id.toUpperCase()} 7-Day Learning Plan</h4>`;
+      
+      backendCourses[id].forEach(day => {
+        html += `
+          <div class="day-item" onclick="toggleNotes(this)">
+            <strong>${day.day}</strong><br>
+            <a href="${day.link}" target="_blank">Learn more</a>
+            <div class="notes-content">
+              <ul>
+                ${day.notes.map(note => `<li>${note}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        `;
+      });
+      
+      detail.innerHTML = html;
+    }
+
+    function loadDatabase() {
+      const content = document.getElementById('course-detail');
+      content.style.display = 'block';
+      content.innerHTML = `
+        <div class="back-btn" onclick="clearDetails()">← Back to Courses</div>
+        <h3>Database Courses Management</h3>
+        <div class="course-grid">
+          <div class="course-card" onclick="showDatabaseDetail('mysql')"><i class="fas fa-database"></i><span>MySQL</span></div>
+          <div class="course-card" onclick="showDatabaseDetail('postgres')"><i class="fas fa-database"></i><span>PostgreSQL</span></div>
+          <div class="course-card" onclick="showDatabaseDetail('mongo')"><i class="fas fa-database"></i><span>MongoDB</span></div>
+          <div class="course-card" onclick="showDatabaseDetail('oracle')"><i class="fas fa-database"></i><span>Oracle Database</span></div>
+          <div class="course-card" onclick="showDatabaseDetail('redis')"><i class="fas fa-database"></i><span>Redis</span></div>
+          <div class="course-card" onclick="showDatabaseDetail('firebase')"><i class="fas fa-database"></i><span>Firebase Firestore</span></div>
+          <div class="course-card" onclick="showDatabaseDetail('cassandra')"><i class="fas fa-database"></i><span>Cassandra</span></div>
+        </div>
+        <div id="db-detail" class="detail-section"></div>
+      `;
+    }
+
+    function showDatabaseDetail(course) {
+      const detail = document.getElementById('db-detail');
+      detail.style.display = 'block';
+      
+      let html = `<h4>${course.toUpperCase()} 7-Day Learning Plan</h4>`;
+      
+      databaseCourses[course].forEach(day => {
+        html += `
+          <div class="day-item" onclick="toggleNotes(this)">
+            <strong>${day.day}</strong><br>
+            <a href="${day.link}" target="_blank">Learn more</a>
+            <div class="notes-content">
+              <ul>
+                ${day.notes.map(note => `<li>${note}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        `;
+      });
+      
+      detail.innerHTML = html;
+    }
+
+    function loadDevOps() {
+      const content = document.getElementById('course-detail');
+      content.style.display = 'block';
+      content.innerHTML = `
+        <div class="back-btn" onclick="clearDetails()">← Back to Courses</div>
+        <h3>DevOps Management</h3>
+        <div class="course-grid">
+          <div class="course-card" onclick="showDevOpsDetail()"><i class="fas fa-tools"></i><span>DevOps 7-Day Plan</span></div>
+        </div>
+        <div id="devops-detail" class="detail-section"></div>
+      `;
+    }
+
+    function showDevOpsDetail() {
+      const detail = document.getElementById('devops-detail');
+      detail.style.display = 'block';
+      
+      let html = `<h4>DEVOPS 7-DAY LEARNING PLAN</h4>`;
+      
+      devopsContent.forEach(day => {
+        html += `
+          <div class="day-item" onclick="toggleNotes(this)">
+            <strong>${day.day}</strong><br>
+            <a href="${day.link}" target="_blank">Learn more</a>
+            <div class="notes-content">
+              <ul>
+                ${day.notes.map(note => `<li>${note}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+        `;
+      });
+      
+      detail.innerHTML = html;
+    }
+
+    function loadHackathon(type) {
+      const detail = document.getElementById('hackathon-detail');
+      detail.style.display = 'block';
+      if (type === 'ongoing') {
+        detail.innerHTML = `
+          <div class="back-btn" onclick="loadSection('hackathons')">← Back to Hackathons</div>
+          <h3>Ongoing Hackathons</h3>
+          <div class="option-box">
+            <h3>Upload Hackathon</h3>
+            <input type="text" id="hackathonOrganizer" placeholder="Organizer Name">
+            <input type="text" id="hackathonTitle" placeholder="Hackathon Title">
+            <input type="date" id="hackathonDate" placeholder="Event Date">
+            <input type="text" id="hackathonLocation" placeholder="Location">
+            <textarea id="hackathonDescription" placeholder="Hackathon Description"></textarea>
+            <textarea id="hackathonRules" placeholder="Rules and Guidelines"></textarea>
+            <input type="file" id="hackathonImage" accept="image/*" onchange="previewHackathonImage(event)">
+            <img id="hackathonPreview" src="" alt="Image Preview" style="width:100%; margin-top:10px; display:none;">
+            <button onclick="uploadHackathon()">Upload Hackathon</button>
+          </div>
+          <div id="hackathonList"></div>
+        `;
+        renderHackathons();
+      } else {
+        detail.innerHTML = `
+          <div class="back-btn" onclick="loadSection('hackathons')">← Back to Hackathons</div>
+          <h3>${type.charAt(0).toUpperCase() + type.slice(1).replace('-', ' ')} Hackathons</h3>
+          <p>Manage ${type} hackathons here.</p>
+        `;
+      }
+    }
+
+    function clearDetails() {
+      const content = document.getElementById('course-detail');
+      content.style.display = 'none';
+      content.innerHTML = '';
+    }
+
+    function toggleNotes(el) {
+      const notes = el.querySelector('.notes-content');
+      notes.style.display = notes.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Certificates Management
+    function addCertificate() {
+      const name = document.getElementById('certName').value.trim();
+      const recipient = document.getElementById('certRecipient').value.trim();
+      if (!name || !recipient) {
+        showNotification('Please fill all fields!');
+        return;
+      }
+      certificates.push({ id: certCounter++, name, recipient });
+      renderCertificates();
+      document.getElementById('certName').value = '';
+      document.getElementById('certRecipient').value = '';
+      showNotification('Certificate added!');
+    }
+
+    function renderCertificates() {
+      const listDiv = document.getElementById('certificateList');
+      listDiv.innerHTML = certificates.map(c => `
+        <div class="certificate-card">
+          <h4>Certificate ${c.id}</h4>
+          <p><b>Name:</b> ${c.name}</p>
+          <p><b>Recipient:</b> ${c.recipient}</p>
+        </div>
+      `).join('');
+    }
+
+    // Internships Management
+    function previewInternshipImage(event) {
+      const img = document.getElementById('internshipPreview');
+      img.src = URL.createObjectURL(event.target.files[0]);
+      img.style.display = 'block';
+    }
+
+    function uploadInternship() {
+      const company = document.getElementById('companyName').value.trim();
+      const title = document.getElementById('internshipTitle').value.trim();
+      const positions = document.getElementById('positions').value.trim();
+      const area = document.getElementById('area').value.trim();
+      const skills = document.getElementById('skills').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const notes = document.getElementById('notes').value.trim();
+      const image = document.getElementById('internshipPreview').src;
+      if (!company || !title || !positions || !area || !skills || !description) {
+        showNotification('Please fill all required fields!');
+        return;
+      }
+      internships.push({ id: internshipCounter++, company, title, positions, area, skills, description, notes, image });
+      renderInternships();
+      document.getElementById('companyName').value = '';
+      document.getElementById('internshipTitle').value = '';
+      document.getElementById('positions').value = '';
+      document.getElementById('area').value = '';
+      document.getElementById('skills').value = '';
+      document.getElementById('description').value = '';
+      document.getElementById('notes').value = '';
+      document.getElementById('internshipImage').value = '';
+      document.getElementById('internshipPreview').style.display = 'none';
+      showNotification('Internship uploaded!');
+    }
+
+    function renderInternships() {
+      const listDiv = document.getElementById('internshipList');
+      listDiv.innerHTML = internships.map(i => `
+        <div class="internship-card">
+          ${i.image ? `<img src="${i.image}" alt="Internship Image">` : ''}
+          <h4>Internship ${i.id}: ${i.title}</h4>
+          <p><b>Company:</b> ${i.company}</p>
+          <p><b>Positions:</b> ${i.positions}</p>
+          <p><b>Domain:</b> ${i.area}</p>
+          <p><b>Skills:</b> ${i.skills}</p>
+          <p><b>Description:</b> ${i.description}</p>
+          <p><b>Notes:</b> ${i.notes}</p>
+        </div>
+      `).join('');
+    }
+
+    // Jobs Management
+    function previewJobImage(event) {
+      const img = document.getElementById('jobPreview');
+      img.src = URL.createObjectURL(event.target.files[0]);
+      img.style.display = 'block';
+    }
+
+    function previewPosterImage(event) {
+      const img = document.getElementById('posterPreview');
+      img.src = URL.createObjectURL(event.target.files[0]);
+      img.style.display = 'block';
+    }
+
+    function uploadJob() {
+      const company = document.getElementById('companyName').value.trim();
+      const title = document.getElementById('jobTitle').value.trim();
+      const positions = document.getElementById('positions').value.trim();
+      const area = document.getElementById('area').value.trim();
+      const skills = document.getElementById('skills').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const notes = document.getElementById('notes').value.trim();
+      const image = document.getElementById('jobPreview').src;
+      if (!company || !title || !positions || !area || !skills || !description) {
+        showNotification('Please fill all required fields!');
+        return;
+      }
+      jobs.push({ id: jobCounter++, company, title, positions, area, skills, description, notes, image });
+      renderJobs();
+      document.getElementById('companyName').value = '';
+      document.getElementById('jobTitle').value = '';
+      document.getElementById('positions').value = '';
+      document.getElementById('area').value = '';
+      document.getElementById('skills').value = '';
+      document.getElementById('description').value = '';
+      document.getElementById('notes').value = '';
+      document.getElementById('jobImage').value = '';
+      document.getElementById('jobPreview').style.display = 'none';
+      showNotification('Job uploaded!');
+    }
+
+    function createPoster() {
+      const company = document.getElementById('posterCompany').value.trim();
+      const title = document.getElementById('posterTitle').value.trim();
+      const positions = document.getElementById('posterPositions').value.trim();
+      const type = document.getElementById('posterType').value;
+      const location = document.getElementById('posterLocation').value.trim();
+      const skills = document.getElementById('posterSkills').value.trim();
+      const benefits = document.getElementById('posterBenefits').value.trim();
+      const description = document.getElementById('posterDescription').value.trim();
+      const notes = document.getElementById('posterNotes').value.trim();
+      const image = document.getElementById('posterPreview').src;
+      if (!company || !title || !positions || !type || !location || !skills || !benefits || !description) {
+        showNotification('Please fill all required fields!');
+        return;
+      }
+      posters.push({ id: posterCounter++, company, title, positions, type, location, skills, benefits, description, notes, image });
+      renderPosters();
+      document.getElementById('posterCompany').value = '';
+      document.getElementById('posterTitle').value = '';
+      document.getElementById('posterPositions').value = '';
+      document.getElementById('posterType').value = 'Full-Time';
+      document.getElementById('posterLocation').value = '';
+      document.getElementById('posterSkills').value = '';
+      document.getElementById('posterBenefits').value = '';
+      document.getElementById('posterDescription').value = '';
+      document.getElementById('posterNotes').value = '';
+      document.getElementById('posterImage').value = '';
+      document.getElementById('posterPreview').style.display = 'none';
+      showNotification('Job poster created!');
+    }
+
+    function renderJobs() {
+      const listDiv = document.getElementById('jobList');
+      listDiv.innerHTML = jobs.map(j => `
+        <div class="job-card">
+          ${j.image ? `<img src="${j.image}" alt="Job Image">` : ''}
+          <h4>Job ${j.id}: ${j.title}</h4>
+          <p><b>Company:</b> ${j.company}</p>
+          <p><b>Positions:</b> ${j.positions}</p>
+          <p><b>Domain:</b> ${j.area}</p>
+          <p><b>Skills:</b> ${j.skills}</p>
+          <p><b>Description:</b> ${j.description}</p>
+          <p><b>Notes:</b> ${j.notes}</p>
+        </div>
+      `).join('');
+    }
+
+    function renderPosters() {
+      const listDiv = document.getElementById('posterList');
+      listDiv.innerHTML = posters.map(p => `
+        <div class="poster-card">
+          ${p.image ? `<img src="${p.image}" alt="Poster Image">` : ''}
+          <h4>Poster ${p.id}: ${p.title}</h4>
+          <p><b>Company:</b> ${p.company}</p>
+          <p><b>Positions:</b> ${p.positions}</p>
+          <p><b>Type:</b> ${p.type}</p>
+          <p><b>Location:</b> ${p.location}</p>
+          <p><b>Skills:</b> ${p.skills}</p>
+          <p><b>Benefits:</b> ${p.benefits}</p>
+          <p><b>Description:</b> ${p.description}</p>
+          <p><b>Notes:</b> ${p.notes}</p>
+        </div>
+      `).join('');
+    }
+
+    // Assignments Management
+    function createAssignment() {
+      const title = document.getElementById('assignmentTitle').value.trim();
+      const description = document.getElementById('assignmentDesc').value.trim();
+      const dueDate = document.getElementById('assignmentDue').value;
+      if (!title || !description || !dueDate) {
+        showNotification('Please fill all fields!');
+        return;
+      }
+      assignments.push({ id: assignmentCounter++, title, description, dueDate, type: 'User', status: 'Submitted', certificateIssued: false });
+      renderAssignments();
+      renderVerifyAssignments();
+      // Refresh Write Assignments section to update dropdown
+      if (document.getElementById('assignmentForm')) {
+        loadSection('write-assignments');
+      }
+      document.getElementById('assignmentTitle').value = '';
+      document.getElementById('assignmentDesc').value = '';
+      document.getElementById('assignmentDue').value = '';
+      showNotification('Assignment uploaded!');
+    }
+
+    function createHeadAssignment() {
+      const title = document.getElementById('headAssignmentTitle').value.trim();
+      const description = document.getElementById('headAssignmentDesc').value.trim();
+      const dueDate = document.getElementById('headAssignmentDue').value;
+      const user = document.getElementById('assignmentUser').value.trim();
+      const password = document.getElementById('headPassword').value.trim();
+      if (!title || !description || !dueDate || !user || !password) {
+        showNotification('Please fill all fields!');
+        return;
+      }
+      if (password !== '7780441516vishnu') {
+        assignments.push({ id: assignmentCounter++, title, description, dueDate, user, type: 'Head', status: 'Rejected', certificateIssued: false });
+        showNotification('Invalid head password! Assignment rejected.');
+      } else {
+        assignments.push({ id: assignmentCounter++, title, description, dueDate, user, type: 'Head', status: 'Approved', certificateIssued: true });
+        certificates.push({ id: certCounter++, name: `Assignment: ${title}`, recipient: user });
+        showNotification('Head Assignment created and certificate issued!');
+      }
+      renderAssignments();
+      renderCertificates();
+      renderVerifyAssignments();
+      // Refresh Write Assignments section to update dropdown
+      if (document.getElementById('assignmentForm')) {
+        loadSection('write-assignments');
+      }
+      document.getElementById('headAssignmentTitle').value = '';
+      document.getElementById('headAssignmentDesc').value = '';
+      document.getElementById('headAssignmentDue').value = '';
+      document.getElementById('assignmentUser').value = '';
+      document.getElementById('headPassword').value = '';
+    }
+
+    function renderAssignments() {
+      const listDiv = document.getElementById('assignmentList');
+      listDiv.innerHTML = assignments.map(a => `
+        <div class="assignment-card">
+          <h4>${a.type} Assignment ${a.id}: ${a.title}</h4>
+          <p><b>Description:</b> ${a.description}</p>
+          <p><b>Due Date:</b> ${a.dueDate}</p>
+          ${a.type === 'Head' ? `<p><b>User:</b> ${a.user}</p>` : ''}
+          <p><b>Status:</b> ${a.status}</p>
+          <p><b>Certificate Issued:</b> ${a.certificateIssued ? 'Yes' : 'No'}</p>
+        </div>
+      `).join('');
+    }
+
+    // Write Assignments Management
+    function loadAssignmentDetails() {
+      const select = document.getElementById('selectAssignment');
+      const assignmentId = select.value;
+      const detailsDiv = document.getElementById('assignmentDetails');
+      if (!assignmentId) {
+        detailsDiv.innerHTML = '';
+        return;
+      }
+      const assignment = assignments.find(a => a.id == assignmentId);
+      if (assignment) {
+        detailsDiv.innerHTML = `
+          <h4>Selected Assignment Details</h4>
+          <p><b>Title:</b> ${assignment.title}</p>
+          <p><b>Description:</b> ${assignment.description}</p>
+          <p><b>Due Date:</b> ${assignment.dueDate}</p>
+          <p><b>Type:</b> ${assignment.type}</p>
+        `;
+      }
+    }
+
+    function submitWrittenAssignment() {
+      const select = document.getElementById('selectAssignment').value;
+      const answer = document.getElementById('writeAssignmentAnswer').value.trim();
+      const title = document.getElementById('writeAssignmentTitle').value.trim();
+      const description = document.getElementById('writeAssignmentDesc').value.trim();
+      const dueDate = document.getElementById('writeAssignmentDue').value;
+      const user = document.getElementById('writeAssignmentUser').value.trim();
+      const type = document.getElementById('assignmentType').value;
+      if (!select && (!title || !description || !dueDate)) {
+        showNotification('Please select an assignment or fill all required fields for a new assignment!');
+        return;
+      }
+      if (type === 'Head' && !user) {
+        showNotification('Please provide User Name for Head Assignment!');
+        return;
+      }
+      if (!answer) {
+        showNotification('Please provide an answer!');
+        return;
+      }
+      const assignmentData = select ? 
+        { ...assignments.find(a => a.id == select), answer, user: type === 'Head' ? user : undefined } :
+        { id: writtenAssignmentCounter++, title, description, dueDate, answer, user: type === 'Head' ? user : undefined, type };
+      writtenAssignments.push({
+        ...assignmentData,
+        id: writtenAssignmentCounter++,
+        status: type === 'Head' ? 'Pending' : 'Submitted',
+        certificateIssued: false
+      });
+      renderWrittenAssignments();
+      renderVerifyAssignments();
+      // Clear only the answer field, keep other inputs visible
+      document.getElementById('writeAssignmentAnswer').value = '';
+      document.getElementById('assignmentDetails').innerHTML = '';
+      showNotification(type === 'Head' ? 'Head Assignment submitted for verification!' : 'Assignment submitted!');
+      // Refresh the dropdown to include any new assignments
+      const selectAssignment = document.getElementById('selectAssignment');
+      selectAssignment.innerHTML = `
+        <option value="">Select an Assignment</option>
+        ${assignments.map(a => `<option value="${a.id}">${a.type} Assignment ${a.id}: ${a.title}</option>`).join('')}
+      `;
+    }
+
+    function renderWrittenAssignments() {
+      const listDiv = document.getElementById('writtenAssignmentList');
+      listDiv.innerHTML = writtenAssignments.map(a => `
+        <div class="assignment-card">
+          <h4>${a.type} Assignment ${a.id}: ${a.title}</h4>
+          <p><b>Description:</b> ${a.description}</p>
+          <p><b>Due Date:</b> ${a.dueDate}</p>
+          <p><b>Answer:</b> ${a.answer}</p>
+          ${a.type === 'Head' ? `<p><b>User:</b> ${a.user}</p>` : ''}
+          <p><b>Status:</b> ${a.status}</p>
+          <p><b>Certificate Issued:</b> ${a.certificateIssued ? 'Yes' : 'No'}</p>
+        </div>
+      `).join('');
+    }
+
+    // Verify Assignments Management
+    function verifyAssignment(id, source, action) {
+      const password = prompt(`Enter head password to ${action} assignment:`);
+      if (password !== '7780441516vishnu') {
+        showNotification('Invalid head password! Action not performed.');
+        return;
+      }
+      let assignment;
+      if (source === 'assignments') {
+        assignment = assignments.find(a => a.id === id && a.type === 'Head');
+        if (!assignment) return;
+        if (action === 'approve') {
+          assignment.status = 'Approved';
+          assignment.certificateIssued = true;
+          certificates.push({ id: certCounter++, name: `Assignment: ${assignment.title}`, recipient: assignment.user });
+          showNotification('Assignment approved and certificate issued!');
+        } else {
+          assignment.status = 'Rejected';
+          assignment.certificateIssued = false;
+          showNotification('Assignment rejected!');
+        }
+        renderAssignments();
+      } else {
+        assignment = writtenAssignments.find(a => a.id === id && a.type === 'Head');
+        if (!assignment) return;
+        if (action === 'approve') {
+          assignment.status = 'Approved';
+          assignment.certificateIssued = true;
+          certificates.push({ id: certCounter++, name: `Assignment: ${assignment.title}`, recipient: assignment.user });
+          showNotification('Assignment approved and certificate issued!');
+        } else {
+          assignment.status = 'Rejected';
+          assignment.certificateIssued = false;
+          showNotification('Assignment rejected!');
+        }
+        renderWrittenAssignments();
+      }
+      renderCertificates();
+      renderVerifyAssignments();
+    }
+
+    function renderVerifyAssignments() {
+      const listDiv = document.getElementById('verifyAssignmentList');
+      const allAssignments = [...assignments, ...writtenAssignments];
+      listDiv.innerHTML = allAssignments.map(a => `
+        <div class="assignment-card">
+          <h4>${a.type} Assignment ${a.id}: ${a.title}</h4>
+          <p><b>Description:</b> ${a.description}</p>
+          <p><b>Due Date:</b> ${a.dueDate}</p>
+          ${a.answer ? `<p><b>Answer:</b> ${a.answer}</p>` : ''}
+          ${a.type === 'Head' ? `<p><b>User:</b> ${a.user}</p>` : ''}
+          <p><b>Status:</b> ${a.status}</p>
+          <p><b>Certificate Issued:</b> ${a.certificateIssued ? 'Yes' : 'No'}</p>
+          ${a.type === 'Head' && a.status === 'Pending' ? `
+            <button onclick="verifyAssignment(${a.id}, '${a.type === 'Head' && writtenAssignments.includes(a) ? 'writtenAssignments' : 'assignments'}', 'approve')">Approve</button>
+            <button onclick="verifyAssignment(${a.id}, '${a.type === 'Head' && writtenAssignments.includes(a) ? 'writtenAssignments' : 'assignments'}', 'reject')">Reject</button>
+          ` : ''}
+        </div>
+      `).join('');
+    }
+
+    // Team Work Management
+    function previewTaskAttachment(event) {
+      const img = document.getElementById('attachmentPreview');
+      img.src = URL.createObjectURL(event.target.files[0]);
+      img.style.display = 'block';
+    }
+
+    function assignWork() {
+      const assignerName = document.getElementById('assignerName').value.trim();
+      const taskTitle = document.getElementById('taskTitle').value.trim();
+      const taskDesc = document.getElementById('taskDesc').value.trim();
+      const dueDate = document.getElementById('dueDate').value;
+      const assignedTo = document.getElementById('assignedTo').value.trim();
+      const attachment = document.getElementById('attachmentPreview').src;
+      if (!assignerName || !taskTitle || !taskDesc || !dueDate || !assignedTo) {
+        showNotification('Please fill all required fields!');
+        return;
+      }
+      tasks.push({ id: taskCounter++, assignerName, taskTitle, taskDesc, dueDate, assignedTo, attachment });
+      renderTasks();
+      document.getElementById('assignerName').value = '';
+      document.getElementById('taskTitle').value = '';
+      document.getElementById('taskDesc').value = '';
+      document.getElementById('dueDate').value = '';
+      document.getElementById('assignedTo').value = '';
+      document.getElementById('taskAttachment').value = '';
+      document.getElementById('attachmentPreview').style.display = 'none';
+      showNotification('Task assigned!');
+    }
+
+    function renderTasks() {
+      const listDiv = document.getElementById('taskList');
+      listDiv.innerHTML = tasks.map(t => `
+        <div class="task-card">
+          ${t.attachment ? `<img src="${t.attachment}" alt="Attachment">` : ''}
+          <h4>Task ${t.id}: ${t.taskTitle}</h4>
+          <p><b>Assigned by:</b> ${t.assignerName}</p>
+          <p><b>Assigned to:</b> ${t.assignedTo}</p>
+          <p><b>Description:</b> ${t.taskDesc}</p>
+          <p><b>Due Date:</b> ${t.dueDate}</p>
+        </div>
+      `).join('');
+    }
+
+    // Events Management
+    function previewEventImage(event) {
+      const img = document.getElementById('eventPreview');
+      img.src = URL.createObjectURL(event.target.files[0]);
+      img.style.display = 'block';
+    }
+
+    function uploadEvent() {
+      const uploaderName = document.getElementById('uploaderName').value.trim();
+      const eventTitle = document.getElementById('eventTitle').value.trim();
+      const eventDate = document.getElementById('eventDate').value;
+      const eventDescription = document.getElementById('eventDescription').value.trim();
+      const image = document.getElementById('eventPreview').src;
+      if (!uploaderName || !eventTitle || !eventDate || !eventDescription) {
+        showNotification('Please fill all required fields!');
+        return;
+      }
+      events.push({ id: eventCounter++, uploaderName, eventTitle, eventDate, eventDescription, image });
+      renderEvents();
+      document.getElementById('uploaderName').value = '';
+      document.getElementById('eventTitle').value = '';
+      document.getElementById('eventDate').value = '';
+      document.getElementById('eventDescription').value = '';
+      document.getElementById('eventImage').value = '';
+      document.getElementById('eventPreview').style.display = 'none';
+      showNotification('Event uploaded!');
+    }
+
+    function renderEvents() {
+      const listDiv = document.getElementById('eventList');
+      listDiv.innerHTML = events.map(e => `
+        <div class="event-card">
+          ${e.image ? `<img src="${e.image}" alt="Event Image">` : ''}
+          <h4>Event ${e.id}: ${e.eventTitle}</h4>
+          <p><b>Uploader:</b> ${e.uploaderName}</p>
+          <p><b>Date:</b> ${e.eventDate}</p>
+          <p><b>Description:</b> ${e.eventDescription}</p>
+        </div>
+      `).join('');
+    }
+
+    // Hackathons Management
+    function previewHackathonImage(event) {
+      const img = document.getElementById('hackathonPreview');
+      img.src = URL.createObjectURL(event.target.files[0]);
+      img.style.display = 'block';
+    }
+
+    function uploadHackathon() {
+      const organizer = document.getElementById('hackathonOrganizer').value.trim();
+      const title = document.getElementById('hackathonTitle').value.trim();
+      const date = document.getElementById('hackathonDate').value;
+      const location = document.getElementById('hackathonLocation').value.trim();
+      const description = document.getElementById('hackathonDescription').value.trim();
+      const rules = document.getElementById('hackathonRules').value.trim();
+      const image = document.getElementById('hackathonPreview').src;
+      if (!organizer || !title || !date || !location || !description || !rules) {
+        showNotification('Please fill all required fields!');
+        return;
+      }
+      hackathons.push({ id: hackathonCounter++, organizer, title, date, location, description, rules, image });
+      renderHackathons();
+      document.getElementById('hackathonOrganizer').value = '';
+      document.getElementById('hackathonTitle').value = '';
+      document.getElementById('hackathonDate').value = '';
+      document.getElementById('hackathonLocation').value = '';
+      document.getElementById('hackathonDescription').value = '';
+      document.getElementById('hackathonRules').value = '';
+      document.getElementById('hackathonImage').value = '';
+      document.getElementById('hackathonPreview').style.display = 'none';
+      showNotification('Hackathon uploaded!');
+    }
+
+    function renderHackathons() {
+      const listDiv = document.getElementById('hackathonList');
+      listDiv.innerHTML = hackathons.map(h => `
+        <div class="hackathon-card">
+          ${h.image ? `<img src="${h.image}" alt="Hackathon Image">` : ''}
+          <h4>Hackathon ${h.id}: ${h.title}</h4>
+          <p><b>Organizer:</b> ${h.organizer}</p>
+          <p><b>Date:</b> ${h.date}</p>
+          <p><b>Location:</b> ${h.location}</p>
+          <p><b>Description:</b> ${h.description}</p>
+          <p><b>Rules:</b> ${h.rules}</p>
+        </div>
+      `).join('');
+    }
+  </script>
+
+</body>
+</html>
